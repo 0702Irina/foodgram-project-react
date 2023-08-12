@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-eo$gz-1xk6w%llg(2erks-3b@&f_!fmyioy$s&9va3rlvg9ztp'
+SECRET_KEY = 'django-insecure-hz1x@*8r@1a5gdvs16dy(!xr0=@&8)2l*pv*0%i8lk$*sgs7_!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'djoser',
+    'api',
+    'recipes'
 ]
 
 MIDDLEWARE = [
@@ -49,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'food.urls'
+ROOT_URLCONF = 'backend_food.urls'
 
 TEMPLATES = [
     {
@@ -67,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'food.wsgi.application'
+WSGI_APPLICATION = 'backend_food.wsgi.application'
 
 
 # Database
