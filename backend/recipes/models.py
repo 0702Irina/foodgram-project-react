@@ -84,7 +84,7 @@ class Follow(models. Model):
         return f'{self.user} follows {self.following}'
 
     def get_absolute_url(self):
-        pass
+        return f'/follow/{self.pk}/'
 
 
 class Recipe(models.Model):
@@ -142,7 +142,7 @@ class Recipe(models.Model):
         return self.name[:20]
 
     def get_absolute_url(self):
-        pass
+        return f'/recipe/{self.pk}/'
 
 
 class RecipeIngredient(models.Model):
@@ -183,7 +183,7 @@ class Shopping_list(models. Model):
         verbose_name_plural = 'Списки покупок'
 
     def get_absolute_url(self):
-        pass
+        return f'/sl/{self.pk}/'
 
 
 class Favorites(models. Model):
@@ -209,4 +209,4 @@ class Favorites(models. Model):
         verbose_name_plural = 'Избранные рецепты'
 
     def get_absolute_url(self):
-        pass
+        return f'/favorites/{self.pk}/'
