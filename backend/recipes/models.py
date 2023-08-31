@@ -83,9 +83,6 @@ class Follow(models. Model):
     def __str__(self) -> str:
         return f'{self.user} follows {self.following}'
 
-    def get_absolute_url(self):
-        return f'/follow/{self.pk}/'
-
 
 class Recipe(models.Model):
     name = models.CharField(
@@ -207,6 +204,3 @@ class Favorites(models. Model):
     class Meta:
         verbose_name = 'Избранный рецепт'
         verbose_name_plural = 'Избранные рецепты'
-
-    def get_absolute_url(self):
-        return f'/favorites/{self.pk}/'
