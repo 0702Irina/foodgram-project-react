@@ -1,7 +1,26 @@
-модели
--юзер
--теги
--рецепты
--подписки
--список покупок
--ингридиенты
+python manage.py runserver
+
+git clone 100785
+
+Виртуальное окружение
+python -m venv venv
+source venv/Scripts/activate
+deactivate
+
+Уствновка программ
+python -m pip install --upgrade pip
+pip freeze > requirements.txt
+pip install -r requirements.txt
+
+Git
+git add .
+git commit -m
+git push
+
+Django
+pip install Django==2.2.19
+django-admin startproject (имя_проекта) создание проекта
+python3 manage.py startapp (приложение) создание приложения
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
