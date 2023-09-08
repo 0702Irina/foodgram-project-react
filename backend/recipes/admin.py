@@ -9,7 +9,7 @@ from recipes.models import (
     Tag
 )
 
-
+@admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
         'name',
@@ -25,7 +25,7 @@ class RecipeAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
     verbose_name = 'Рецепты',
 
-
+@admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = (
         'name',
@@ -36,7 +36,7 @@ class IngredientAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
     verbose_name = 'Ингридиент',
 
-
+@admin.register(Shopping_list)
 class Shopping_listAdmin(admin.ModelAdmin):
     list_display = (
         'user',
@@ -48,7 +48,7 @@ class Shopping_listAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
     verbose_name = 'Список покупок',
 
-
+@admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = (
         'color',
@@ -60,7 +60,7 @@ class TagAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
     verbose_name = 'Тег',
 
-
+@admin.register(Favorites)
 class FavoritesAdmin(admin.ModelAdmin):
     list_display = (
         'user',
@@ -68,7 +68,7 @@ class FavoritesAdmin(admin.ModelAdmin):
         'recipe'
     )
 
-
+@admin.register(Follow)
 class FollowAdmin(admin.ModelAdmin):
     list_display = (
         'user',
@@ -80,9 +80,9 @@ class FollowAdmin(admin.ModelAdmin):
     verbose_name = 'Подписки',
 
 
-admin.site.register(Recipe, RecipeAdmin)
-admin.site.register(Tag, TagAdmin)
-admin.site.register(Favorites, FavoritesAdmin)
-admin.site.register(Follow, FollowAdmin)
-admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(Shopping_list, Shopping_listAdmin)
+# admin.site.register(Recipe, RecipeAdmin)
+# admin.site.register(Tag, TagAdmin)
+# admin.site.register(Favorites, FavoritesAdmin)
+# admin.site.register(Follow, FollowAdmin)
+# admin.site.register(Ingredient, IngredientAdmin)
+# admin.site.register(Shopping_list, Shopping_listAdmin)

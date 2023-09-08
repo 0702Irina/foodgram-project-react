@@ -86,6 +86,14 @@ class Follow(models. Model):
 
 
 class Recipe(models.Model):
+    tag = models.ForeignKey(
+        Tag,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        verbose_name='Тег',
+        help_text='Выберите тег из списка',
+    )
     name = models.CharField(
         verbose_name='Название рецепта',
         max_length=200
@@ -96,7 +104,7 @@ class Recipe(models.Model):
     )
     author = models.ForeignKey(
         User,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True,
         verbose_name='Автор рецепта',
         help_text='Укажите автора рецепта',
@@ -109,14 +117,6 @@ class Recipe(models.Model):
         verbose_name='Название ингридиента',
         help_text='Выберите название ингридиента из списка',
     )
-    tag = models.ForeignKey(
-        Tag,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        verbose_name='Тег',
-        help_text='Выберите тег из списка',
-    )
     pub_date = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Дата публикации',
@@ -128,6 +128,10 @@ class Recipe(models.Model):
         blank=True,
         verbose_name='Фото блюда',
         help_text='Добавьте фото готового блюда',
+    )
+    cooking_time = models.PositiveIntegerField(
+        verbose_name='Время приготовления блюда',
+        help_text='Введите время приготовления блюда ',
     )
     is_published = models.BooleanField(default=True)
 
