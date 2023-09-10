@@ -4,11 +4,29 @@ from recipes.models import (
     Favorites,
     Follow,
     Recipe,
-    Tag
+    Tag,
+    User
 )
+from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
 # from rest_framework.serializers import CurrentUserDefault
 
+
+
+class UserSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        validators=[UniqueValidator(queryset=User.objects.all())],
+        max_length=150
+    )
+    email = serializers.EmailField(
+        validators=[UniqueValidator(queryset=User.objects.all())],
+        max_length=254
+    )
+
+    class Meta:
+        fields = '__all__'
+        model = User
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:

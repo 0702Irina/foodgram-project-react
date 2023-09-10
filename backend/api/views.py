@@ -6,27 +6,40 @@ from recipes.models import (
     Favorites,
     Follow,
     Recipe,
-    Tag
+    Tag,
+    User
 )
 from djoser.views import UserViewSet
 from rest_framework import viewsets
-# from rest_framework.filters import SearchFilter
-# from rest_framework.pagination import LimitOffsetPagination
-# from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 
-# from api.permissions import IsAuthorOrReadOnly
+from api.permissions import IsAdmin
 from api.serializers import (
     IngredientSerializer,
     FavoritesSerializer,
     FollowSerializer,
     RecipeSerializer,
     SlistSerializer,
-    TagSerializer
+    TagSerializer,
+    UserSerializer
 )
 
 
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, IsAdmin]
+    pagination_class = PageNumberPagination
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['username', ]
+    lookup_field = 'username'
+    http_method_names = ['get', 'post', 'patch', 'delete']
 class CustomUserViewSet(UserViewSet):
-    pass
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()

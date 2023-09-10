@@ -129,6 +129,7 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTH_USER_MODEL = 'recipes.User'
 REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': [
         # 'rest_framework.permissions.IsAuthenticated',
@@ -140,5 +141,15 @@ REST_FRAMEWORK = {
 }
 
 DJOSER = {
-    'LOGIN_FIELD': 'email'
+    # 'PERMISSION': {
+        # 'user': [
+            # 'djoser.permissions.CurrentUserOrAdminOrReadOnly'
+        # ],
+    # },
+    'LOGIN_FIELD': 'email',
+    'SERIALIZERS': {
+        'user_create': 'api.serializers.UserSerializer',
+        'user': 'api.serializers.UserSerializer',
+        'current_user' : 'api.serializers.UserSerializer'
+    }
 }

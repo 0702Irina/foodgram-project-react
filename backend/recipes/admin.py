@@ -1,13 +1,16 @@
 from django.contrib import admin
-
+# from django.contrib.auth import get_user_model
 from recipes.models import (
     Shopping_list,
     Ingredient,
     Favorites,
     Follow,
     Recipe,
-    Tag
+    Tag,
+    User
 )
+
+# User = get_user_model()
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
@@ -79,10 +82,13 @@ class FollowAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
     verbose_name = 'Подписки',
 
-
-# admin.site.register(Recipe, RecipeAdmin)
-# admin.site.register(Tag, TagAdmin)
-# admin.site.register(Favorites, FavoritesAdmin)
-# admin.site.register(Follow, FollowAdmin)
-# admin.site.register(Ingredient, IngredientAdmin)
-# admin.site.register(Shopping_list, Shopping_listAdmin)
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = (
+     'username',
+     'email'
+    )
+    search_fields = ('username', 'email')
+    list_filter = ('username', 'email')
+    empty_value_display = '-пусто-'
+    verbose_name = 'Пользователь',

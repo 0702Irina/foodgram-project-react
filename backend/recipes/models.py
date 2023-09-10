@@ -1,19 +1,48 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 # from api.urls import router_v1
 
-User = get_user_model()
+class User(AbstractUser):
+    email = models.EmailField(
+        'Email',
+        unique=True,
+        blank=True,
+        max_length=200,
+    )
+    first_name = models.CharField(
+        'Имя',
+        max_length=200,
+        blank=True,
+    )
+    last_name = models.CharField(
+        'Фамилия',
+        max_length=200,
 
+    )
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+        ordering = ['username']
+    
+    def __str__(self):
+        return self.username[:20]
 
 class Ingredient(models. Model):
     name = models.CharField(
         'Ингридиент',
+        blank=True,
         max_length=200
     )
     unit = models.CharField(
         'Единицы измерения',
+        blank=True,
         max_length=200,
     )
+    amount = models.IntegerField(
+        'Количество',
+        blank=True,
+    )
+
 
     class Meta:
         verbose_name = 'Ингридиент'
@@ -26,17 +55,21 @@ class Ingredient(models. Model):
 class Tag(models. Model):
     name = models.CharField(
         'Тег',
-        max_length=200
+        unique=True,
+        blank=True,
+        max_length=200,
     )
     color = models.CharField(
         'Цвет',
+        blank=True,
         unique=True,
-        max_length=15
+        max_length=15,
     )
     slug = models.SlugField(
         'Слаг',
+        blank=True,
         unique=True,
-        max_length=200
+        max_length=200,
     )
 
     class Meta:
@@ -54,13 +87,6 @@ class Follow(models. Model):
         on_delete=models.CASCADE,
         verbose_name='Подписчик',
         help_text='Укажите подписчика',
-    )
-    following = models.ForeignKey(
-        User,
-        related_name='following',
-        on_delete=models.CASCADE,
-        verbose_name='Автор рецепта',
-        help_text='Укажите на кого подписываемся',
     )
     following = models.ForeignKey(
         User,
@@ -92,20 +118,23 @@ class Recipe(models.Model):
         blank=True,
         null=True,
         verbose_name='Тег',
-        help_text='Выберите тег из списка',
     )
     name = models.CharField(
+        blank=True,
         verbose_name='Название рецепта',
         max_length=200
     )
     text = models.TextField(
+        blank=True,
         verbose_name='Способ приготовления',
         help_text='Опишите способ приготовления блюда',
     )
     author = models.ForeignKey(
         User,
+        related_name='recipe',
         on_delete=models.CASCADE,
         null=True,
+        blank=True,
         verbose_name='Автор рецепта',
         help_text='Укажите автора рецепта',
     )
@@ -130,6 +159,7 @@ class Recipe(models.Model):
         help_text='Добавьте фото готового блюда',
     )
     cooking_time = models.PositiveIntegerField(
+        blank=True,
         verbose_name='Время приготовления блюда',
         help_text='Введите время приготовления блюда ',
     )
@@ -151,12 +181,10 @@ class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        verbose_name='Рецепт'
     )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        verbose_name='Ингредиент'
     )
     amount = models.IntegerField(
         'Количество',
@@ -166,6 +194,7 @@ class RecipeIngredient(models.Model):
 class Shopping_list(models. Model):
     user = models.ForeignKey(
         User,
+        related_name='sl',
         on_delete=models.CASCADE,
     )
     name = models.CharField(
@@ -177,9 +206,7 @@ class Shopping_list(models. Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        verbose_name='Избранный рецепт'
     )
-
     class Meta:
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'
@@ -191,11 +218,11 @@ class Shopping_list(models. Model):
 class Favorites(models. Model):
     user = models.ForeignKey(
         User,
+        related_name='faworites',
         on_delete=models.CASCADE,
-        verbose_name='Пользователь'
     )
     name = models.CharField(
-        verbose_name='Избранное',
+        verbose_name='Избранные рецепты',
         max_length=200
     )
     recipe = models.ForeignKey(
@@ -203,9 +230,10 @@ class Favorites(models. Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        verbose_name='Избранный рецепт'
     )
 
     class Meta:
         verbose_name = 'Избранный рецепт'
         verbose_name_plural = 'Избранные рецепты'
+
+
