@@ -1,14 +1,12 @@
-python manage.py runserver
-
-git clone 100785
+python3 manage.py runserver
 
 Виртуальное окружение
-python -m venv venv
-source venv/Scripts/activate
+python3 -m venv venv
+source venv/bin/activate
 deactivate
 
 Уствновка программ
-python -m pip install --upgrade pip
+python3 -m pip install --upgrade pip
 pip freeze > requirements.txt
 pip install -r requirements.txt
 
@@ -21,6 +19,9 @@ Django
 pip install Django==2.2.19
 django-admin startproject (имя_проекта) создание проекта
 python3 manage.py startapp (приложение) создание приложения
-python manage.py makemigrations
-python manage.py migrate
-python manage.py createsuperuser
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py createsuperuser
+f
+Docker
+sudo docker-compose up
