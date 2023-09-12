@@ -8,25 +8,14 @@ from recipes.models import (
     User
 )
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
-from rest_framework import serializers
-from rest_framework.serializers import CurrentUserDefault
+from djoser.serializers import UserSerializer
 
 
-
-class UserSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(
-        validators=[UniqueValidator(queryset=User.objects.all())],
-        max_length=150
-    )
-    email = serializers.EmailField(
-        validators=[UniqueValidator(queryset=User.objects.all())],
-        max_length=254
-    )
-
+class UserSerializer(UserSerializer):
     class Meta:
-        fields = '__all__'
         model = User
+        fields = ('email', 'id', 'username', 'first_name', 'last_name')
+
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,6 +37,7 @@ class FollowSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = Recipe
         fields = '__all__'

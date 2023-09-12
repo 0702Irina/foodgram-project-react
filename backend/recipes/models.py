@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
 class User(AbstractUser):
     first_name = models.CharField(
         'Имя',
@@ -17,13 +18,15 @@ class User(AbstractUser):
         blank=True,
         max_length=200,
     )
+
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
         ordering = ['username']
-    
+
     def __str__(self):
         return self.username[:20]
+
 
 class Ingredient(models. Model):
     name = models.CharField(
@@ -37,7 +40,6 @@ class Ingredient(models. Model):
         'Единицы измерения',
         max_length=200,
     )
-
 
     class Meta:
         verbose_name = 'Ингридиент'
@@ -140,7 +142,7 @@ class Recipe(models.Model):
     )
     pub_date = models.DateTimeField(
         auto_now_add=True,
-        blank = True,
+        blank=True,
         verbose_name='Дата публикации',
         help_text='Укажите дату публикации',
     )
@@ -190,6 +192,7 @@ class Shopping_list(models. Model):
         related_name='sl',
         on_delete=models.CASCADE,
     )
+
     class Meta:
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'
@@ -214,5 +217,3 @@ class Favorites(models. Model):
     class Meta:
         verbose_name = 'Избранный рецепт'
         verbose_name_plural = 'Избранные рецепты'
-
-
