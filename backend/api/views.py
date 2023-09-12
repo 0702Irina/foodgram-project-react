@@ -1,5 +1,6 @@
 # from django.shortcuts import get_object_or_404
 # from django_filters.rest_framework import DjangoFilterBackend
+from django.shortcuts import get_object_or_404
 from recipes.models import (
     Shopping_list,
     Ingredient,
@@ -14,9 +15,10 @@ from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
-from api.permissions import IsAdmin
+from api.filters import IngredientFilter
+from api.permissions import IsAdmin, IsAuthor, IsAdminOrReadOnly
 from api.serializers import (
     IngredientSerializer,
     FavoritesSerializer,
@@ -31,29 +33,48 @@ from api.serializers import (
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = PageNumberPagination
     filter_backends = [DjangoFilterBackend, SearchFilter]
     search_fields = ['username', ]
     lookup_field = 'username'
     http_method_names = ['get', 'post', 'patch', 'delete']
+
+
 class CustomUserViewSet(UserViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-class TagViewSet(viewsets.ModelViewSet):
-    queryset = Tag.objects.all()
-    serializer_class = TagSerializer
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    filter_backends = (DjangoFilterBackend,)
+    # filterset_fields = ('author',)
+    # permission_classes = (
+        # IsAuthenticatedOrReadOnly,
+        # IsAuthor
+    # )
+    pagination_class = PageNumberPagination
 
 
 class FollowViewSet(viewsets.ModelViewSet):
-    queryset = Follow.objects.all()
+    http_method_names = ('get', 'post')
+    permission_classes = (IsAuthenticated,)
     serializer_class = FollowSerializer
+    filter_backends = (
+        DjangoFilterBackend,
+        SearchFilter
+    )
+    search_fields = ('user__username', 'following__username')
+    filterset_fields = ('user', 'following')
+
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.request.user.username)
+        return user.follower.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class FavoritesViewSet(viewsets.ModelViewSet):
@@ -64,6 +85,14 @@ class FavoritesViewSet(viewsets.ModelViewSet):
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
+    permission_classes = (IsAdminOrReadOnly,)
+    # filter_backends = (DjangoFilterBackend,)
+    filterset_class = IngredientFilter
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = (IsAdminOrReadOnly,)
 
 
 class SlistViewSet(viewsets.ModelViewSet):

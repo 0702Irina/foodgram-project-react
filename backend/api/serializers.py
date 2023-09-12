@@ -10,7 +10,7 @@ from recipes.models import (
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
-# from rest_framework.serializers import CurrentUserDefault
+from rest_framework.serializers import CurrentUserDefault
 
 
 
@@ -47,6 +47,7 @@ class FollowSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = Recipe
         fields = '__all__'

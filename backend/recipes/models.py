@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-# from api.urls import router_v1
 
 class User(AbstractUser):
     first_name = models.CharField(
@@ -161,9 +160,6 @@ class Recipe(models.Model):
     def __str__(self):
         return self.name[:20]
 
-    # def get_absolute_url(self):
-        # return
-
 
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
@@ -197,9 +193,6 @@ class Shopping_list(models. Model):
     class Meta:
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'
-
-    # def get_absolute_url(self):
-        # return f'/sl/{self.pk}/'
 
 
 class Favorites(models. Model):
