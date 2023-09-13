@@ -9,6 +9,11 @@ class User(AbstractUser):
         unique=True,
         max_length=200,
     )
+    password = models.CharField(
+        'Пароль',
+        max_length=200,
+
+    )
     first_name = models.CharField(
         'Имя',
         max_length=200,
@@ -24,6 +29,7 @@ class User(AbstractUser):
         blank=True,
         max_length=200,
     )
+    is_subscriptions = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -97,7 +103,7 @@ class Follow(models. Model):
     )
 
     class Meta:
-        ordering = ('-user',)
+        ordering = ('-user', )
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
         constraints = (

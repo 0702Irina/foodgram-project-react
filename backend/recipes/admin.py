@@ -71,16 +71,6 @@ class FavoritesAdmin(admin.ModelAdmin):
         'recipe'
     )
 
-@admin.register(Follow)
-class FollowAdmin(admin.ModelAdmin):
-    list_display = (
-        'user',
-        'following',
-    )
-    search_fields = ('user',)
-    list_filter = ('user',)
-    empty_value_display = '-пусто-'
-    verbose_name = 'Подписки',
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
