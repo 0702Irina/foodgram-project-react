@@ -3,6 +3,7 @@ python manage.py runserver
 Виртуальное окружение
 python -m venv venv
 source venv/Scripts/activate
+source venv/bin/activate
 deactivate
 
 Уствновка программ
