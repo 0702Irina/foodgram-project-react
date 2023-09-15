@@ -7,12 +7,13 @@ source venv/bin/activate
 deactivate
 
 Уствновка программ
-python -m pip install --upgrade pip
+python3 -m pip install --upgrade pip
 pip freeze > requirements.txt
 pip install -r requirements.txt
 
 Git
 git add .
+
 git commit -m
 git push
 
@@ -20,9 +21,11 @@ Django
 pip install Django==2.2.19
 django-admin startproject (имя_проекта) создание проекта
 python manage.py startapp (приложение) создание приложения
-python manage.py makemigrations
-python manage.py migrate
+python3 manage.py makemigrations
+python3 manage.py migrate
 python manage.py createsuperuser
 f
 Docker
 sudo docker-compose up
+Token 9fca57663f4eb8d71c41233a4072db5172688dc8
+    "new_password": "100785Diman",
