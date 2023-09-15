@@ -7,6 +7,7 @@ class User(AbstractUser):
     username = models.CharField(
         'Логин',
         unique=True,
+        blank=True,
         max_length=200,
     )
     password = models.CharField(
@@ -16,20 +17,21 @@ class User(AbstractUser):
     )
     first_name = models.CharField(
         'Имя',
+        blank=True,
         max_length=200,
     )
     last_name = models.CharField(
         'Фамилия',
+        blank=True,
         max_length=200,
 
     )
     email = models.EmailField(
         'Email',
         unique=True,
-        blank=True,
         max_length=200,
     )
-    is_subscriptions = models.BooleanField(default=False)
+    is_subscriptions = models.BooleanField(default=False, blank=True,)
 
     class Meta:
         verbose_name = 'Пользователь'
