@@ -4,14 +4,15 @@ from recipes.models import (
     Shopping_list,
     Ingredient,
     Favorites,
-    Follow,
+    # Follow,
     Recipe,
     Tag,
     User
 )
 
 # User = get_user_model()
-  
+
+
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
@@ -28,6 +29,7 @@ class RecipeAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
     verbose_name = 'Рецепты',
 
+
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = (
@@ -38,6 +40,7 @@ class IngredientAdmin(admin.ModelAdmin):
     list_filter = ('name',)
     empty_value_display = '-пусто-'
     verbose_name = 'Ингридиент',
+
 
 @admin.register(Shopping_list)
 class Shopping_listAdmin(admin.ModelAdmin):
@@ -51,6 +54,7 @@ class Shopping_listAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
     verbose_name = 'Список покупок',
 
+
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = (
@@ -62,6 +66,7 @@ class TagAdmin(admin.ModelAdmin):
     list_filter = ('name',)
     empty_value_display = '-пусто-'
     verbose_name = 'Тег',
+
 
 @admin.register(Favorites)
 class FavoritesAdmin(admin.ModelAdmin):
@@ -75,8 +80,8 @@ class FavoritesAdmin(admin.ModelAdmin):
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
-     'username',
-     'email'
+        'username',
+        'email'
     )
     search_fields = ('username', 'email')
     list_filter = ('username', 'email')

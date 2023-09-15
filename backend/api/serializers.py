@@ -7,21 +7,8 @@ from recipes.models import (
     Tag,
     User
 )
-import webcolors
 from rest_framework import serializers
 from djoser.serializers import UserSerializer
-
-
-class Hex2NameColor(serializers.Field):
-    def to_representation(self, value):
-        return value
-
-    def to_internal_value(self, data):
-        try:
-            data = webcolors.hex_to_name(data)
-        except ValueError:
-            raise serializers.ValidationError('Для этого цвета нет имени')
-        return data
 
 
 class UserSerializer(UserSerializer):
@@ -29,12 +16,21 @@ class UserSerializer(UserSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'id', 'username', 'first_name', 'last_name', 'password', 'is_subscribed')
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'password',
+            'is_subscribed'
+        )
 
     def get_is_subscribed(self, object):
         user = self.context['request'].user
         return user.is_authenticated and Follow.objects.filter(
             following=object, user=self.context['request'].user).exists()
+
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
@@ -69,8 +65,6 @@ class SlistSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-    color = Hex2NameColor()
     class Meta:
         model = Tag
         fields = '__all__'
-
