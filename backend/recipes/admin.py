@@ -1,6 +1,7 @@
 from django.contrib import admin
-# from django.contrib.auth import get_user_model
+
 from recipes.models import (
+    RecipeIngredient,
     Shopping_list,
     Ingredient,
     Favorites,
@@ -10,24 +11,26 @@ from recipes.models import (
     User
 )
 
-# User = get_user_model()
+
+class RecipeIngredientInline(admin.TabularInline):
+    model = RecipeIngredient
+    extra = 1
 
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
         'name',
-        'ingredient',
-        'tag',
         'image',
         'text',
         'pub_date',
         'author'
     )
     search_fields = ('name', 'ingredient', 'tag')
-    list_filter = ('pub_date', 'author', 'tag')
+    list_filter = ('pub_date', 'author', 'tag', 'ingredient')
     empty_value_display = '-пусто-'
     verbose_name = 'Рецепты',
+    inlines = (RecipeIngredientInline, )
 
 
 @admin.register(Ingredient)
@@ -58,9 +61,9 @@ class Shopping_listAdmin(admin.ModelAdmin):
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = (
-        'color',
         'name',
-        'slug'
+        'slug',
+        'color',
     )
     search_fields = ('name',)
     list_filter = ('name',)

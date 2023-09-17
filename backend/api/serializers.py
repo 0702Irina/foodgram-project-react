@@ -1,4 +1,5 @@
 from recipes.models import (
+    RecipeIngredient,
     Shopping_list,
     Ingredient,
     Favorites,
@@ -50,8 +51,26 @@ class FollowSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class TagSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Tag
+        fields = '__all__'
+
+
+class RecipeIngredientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecipeIngredient
+        fields = '__all__'
+
+
 class RecipeSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    author = UserSerializer()
+    tag = TagSerializer(many=True)
+    ingridients = RecipeIngredientSerializer(
+        many=True,
+        source='recipeingredient_set'
+    )
 
     class Meta:
         model = Recipe
@@ -61,10 +80,4 @@ class RecipeSerializer(serializers.ModelSerializer):
 class SlistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shopping_list
-        fields = '__all__'
-
-
-class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
         fields = '__all__'

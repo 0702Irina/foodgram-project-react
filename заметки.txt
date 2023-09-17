@@ -21,12 +21,12 @@ Django
 pip install Django==2.2.19
 django-admin startproject (имя_проекта) создание проекта
 python manage.py startapp (приложение) создание приложения
-python3 manage.py makemigrations
+python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser
 f
 Docker
 sudo docker-compose up
-Token aacb100015b8e80b6de275694bb30694d7f46e0c
+Token 408a34f04bbc372de94b46156109603a914befe2
 root
     "new_password": "1007",

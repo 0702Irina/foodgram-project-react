@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
-from colorfield.fields import ColorField
 from django.db import models
+from colorfield.fields import ColorField
 
 
 class User(AbstractUser):
@@ -46,9 +46,6 @@ class Ingredient(models. Model):
     name = models.CharField(
         'Ингридиент',
         max_length=200
-    )
-    amount = models.IntegerField(
-        'Количество',
     )
     unit = models.CharField(
         'Единицы измерения',
@@ -127,20 +124,17 @@ class Recipe(models.Model):
         verbose_name='Название рецепта',
         max_length=200
     )
-    tag = models.ForeignKey(
+    tag = models.ManyToManyField(
         Tag,
-        on_delete=models.CASCADE,
-        null=True,
         verbose_name='Тег',
     )
     text = models.TextField(
         verbose_name='Способ приготовления',
         help_text='Опишите способ приготовления блюда',
     )
-    ingredient = models.ForeignKey(
+    ingredient = models.ManyToManyField(
         Ingredient,
-        on_delete=models.SET_NULL,
-        null=True,
+        through='RecipeIngredient',
         verbose_name='Название ингридиента',
         help_text='Выберите название ингридиента из списка',
     )
@@ -184,14 +178,20 @@ class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
+        verbose_name='Рецепт'
     )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
+        verbose_name='Ингредиент'
     )
-    amount = models.IntegerField(
-        'Количество',
+    amount = models.PositiveIntegerField(
+        verbose_name='Количество'
     )
+
+    class Meta:
+        verbose_name = 'Ингредиент для рецепта'
+        verbose_name_plural = 'Ингредиенты для рецепта'
 
 
 class Shopping_list(models. Model):
