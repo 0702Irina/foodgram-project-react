@@ -26,8 +26,8 @@ class RecipeAdmin(admin.ModelAdmin):
         'pub_date',
         'author'
     )
-    search_fields = ('name', 'ingredient', 'tag')
-    list_filter = ('pub_date', 'author', 'tag', 'ingredient')
+    search_fields = ('name', 'ingredients', 'tags')
+    list_filter = ('pub_date', 'author', 'tags', 'ingredients')
     empty_value_display = '-пусто-'
     verbose_name = 'Рецепты',
     inlines = (RecipeIngredientInline, )
@@ -37,7 +37,7 @@ class RecipeAdmin(admin.ModelAdmin):
 class IngredientAdmin(admin.ModelAdmin):
     list_display = (
         'name',
-        'unit'
+        'measurement_unit'
     )
     search_fields = ('name',)
     list_filter = ('name',)

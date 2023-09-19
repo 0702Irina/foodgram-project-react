@@ -1,5 +1,7 @@
 python manage.py runserver
 
+cd backend
+
 Виртуальное окружение
 python -m venv venv
 source venv/Scripts/activate

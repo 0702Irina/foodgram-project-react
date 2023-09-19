@@ -47,7 +47,7 @@ class Ingredient(models. Model):
         'Ингридиент',
         max_length=200
     )
-    unit = models.CharField(
+    measurement_unit = models.CharField(
         'Единицы измерения',
         max_length=200,
     )
@@ -124,7 +124,7 @@ class Recipe(models.Model):
         verbose_name='Название рецепта',
         max_length=200
     )
-    tag = models.ManyToManyField(
+    tags = models.ManyToManyField(
         Tag,
         verbose_name='Тег',
     )
@@ -132,7 +132,7 @@ class Recipe(models.Model):
         verbose_name='Способ приготовления',
         help_text='Опишите способ приготовления блюда',
     )
-    ingredient = models.ManyToManyField(
+    ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredient',
         verbose_name='Название ингридиента',

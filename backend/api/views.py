@@ -42,6 +42,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
     # permission_classes = (IsAuthenticatedOrReadOnly,IsAuthor)
     pagination_class = PageNumberPagination
 
+    def get_qqueryset(self):
+        recipes = Recipe.objects.prefetch_related(
+            'recipeingredient_set_ingredient', 'tags'
+        ).all()
+        return recipes
+
+
+
 
 class FollowViewSet(viewsets.ModelViewSet):
     http_method_names = ('get', 'post')

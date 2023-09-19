@@ -59,15 +59,21 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField(source='ingredient.id')
+    name = serializers.ReadOnlyField(source='ingredient.name')
+    measurement_unit = serializers.ReadOnlyField(
+        source='ingredient.measurement_unit'
+    )
+
     class Meta:
         model = RecipeIngredient
-        fields = '__all__'
+        fields = ('id', 'name', 'measurement_unit', 'amount')
 
 
 class RecipeSerializer(serializers.ModelSerializer):
     author = UserSerializer()
-    tag = TagSerializer(many=True)
-    ingridients = RecipeIngredientSerializer(
+    tags = TagSerializer(many=True)
+    ingredients = RecipeIngredientSerializer(
         many=True,
         source='recipeingredient_set'
     )
