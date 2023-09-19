@@ -49,8 +49,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return recipes
 
 
-
-
 class FollowViewSet(viewsets.ModelViewSet):
     http_method_names = ('get', 'post')
     permission_classes = (IsAuthenticated,)
