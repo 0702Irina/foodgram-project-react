@@ -75,12 +75,45 @@ class RecipeSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     ingredients = RecipeIngredientSerializer(
         many=True,
-        source='recipeingredient_set'
+        source='recipengredient',
     )
 
     class Meta:
         model = Recipe
         fields = '__all__'
+
+
+class IngredientinRecipeCreate(serializers.ModelSerializer):
+    id = serializers.PrimaryKeyRelatedField(
+        source='ingredient',
+        queryset=Ingredient.objects.all()
+    )
+
+    class Meta:
+        model = RecipeIngredient
+        fields = '__all__'
+
+
+class RecipeCreateSerializers(serializers.ModelSerializer):
+    ingredients = IngredientinRecipeCreate(many=True)
+
+    class Meta:
+        model = Recipe
+        fields = ('name', 'cooking_time', 'text', 'tags', 'ingredients')
+
+    def create(self, validated_data):
+        ingredients = validated_data.pop('ingredients')
+        instance = super().create(validated_data)
+        for ingredient_data in ingredients:
+            RecipeCreateSerializers(
+                recipe=instance,
+                ingredient=ingredient_data('ingredient'),
+                amount=ingredient_data('amount')
+            )
+        return super().create(validated_data)
+
+    # def to_representation(self, instance):
+    #     return super().to_representation(instance)
 
 
 class SlistSerializer(serializers.ModelSerializer):

@@ -19,6 +19,7 @@ from rest_framework.permissions import IsAuthenticated
 from api.filters import IngredientFilter
 from api.permissions import IsAdminOrReadOnly
 from api.serializers import (
+    RecipeCreateSerializers,
     IngredientSerializer,
     FavoritesSerializer,
     FollowSerializer,
@@ -44,9 +45,17 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def get_qqueryset(self):
         recipes = Recipe.objects.prefetch_related(
-            'recipeingredient_set_ingredient', 'tags'
+            'recipengredient', 'tags'
         ).all()
         return recipes
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return RecipeCreateSerializers
+        return RecipeSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 class FollowViewSet(viewsets.ModelViewSet):
