@@ -5,11 +5,23 @@ from recipes.models import (
     Shopping_list,
     Ingredient,
     Favorites,
-    # Follow,
+    Follow,
     Recipe,
     Tag,
     User
 )
+
+
+@admin.register(Follow)
+class FollowAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'following',
+    )
+    search_fields = ('user',)
+    list_filter = ('user',)
+    empty_value_display = '-пусто-'
+    verbose_name = 'Подписки',
 
 
 class RecipeIngredientInline(admin.TabularInline):

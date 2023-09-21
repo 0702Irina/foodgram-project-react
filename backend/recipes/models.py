@@ -126,6 +126,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         Tag,
+        related_name='recipe',
         verbose_name='Тег',
     )
     text = models.TextField(
@@ -134,6 +135,7 @@ class Recipe(models.Model):
     )
     ingredients = models.ManyToManyField(
         Ingredient,
+        related_name='recipe',
         through='RecipeIngredient',
         verbose_name='Название ингридиента',
         help_text='Выберите название ингридиента из списка',

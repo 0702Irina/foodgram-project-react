@@ -13,7 +13,6 @@ from djoser.views import UserViewSet
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from api.filters import IngredientFilter
 from api.permissions import IsAdminOrReadOnly
@@ -44,9 +43,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     filter_backends = (DjangoFilterBackend,)
-    # filterset_fields = ('author',)
+    filterset_fields = ('author',)
     # permission_classes = (IsAuthenticatedOrReadOnly,IsAuthor)
-    pagination_class = PageNumberPagination
 
     def get_queryset(self):
         recipes = Recipe.objects.prefetch_related(
@@ -59,8 +57,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeCreateSerializers
         return RecipeSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+    # def list(self, request):
+
+    #     return super().list(request)
 
 
 class FollowViewSet(viewsets.ModelViewSet):

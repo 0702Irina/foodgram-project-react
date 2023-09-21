@@ -29,7 +29,9 @@ class UserCreateSerializer(UserSerializer):
 
 
 class UserSerializer(UserSerializer):
-    is_subscribed = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField(
+        method_name='get_is_subscribed'
+    )
 
     class Meta:
         model = User
@@ -97,6 +99,13 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = '__all__'
 
+# class RecipeListSerializers(serializers.ModelSerializer):
+#     count = serializers.SerializerMethodField()
+
+#     class Meta:
+#         model = Recipe
+#         fields = ('count', 'name', 'measurement_unit', 'amount')
+
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='ingredient.id')
@@ -117,10 +126,30 @@ class RecipeSerializer(serializers.ModelSerializer):
         many=True,
         source='recipengredient',
     )
+    is_favorited = serializers.SerializerMethodField()
+#        method_name='get_is_favorited')
+    is_in_shopping_cart = serializers.SerializerMethodField()
+#        method_name='get_is_in_shopping_cart')
 
     class Meta:
         model = Recipe
         fields = '__all__'
+
+    def get_is_favorited(self, obj):
+        request = self.context.get('request')
+        if request is None or request.user.is_anonymous:
+            return False
+        return Favorites.objects.filter(
+            user=request.user, recipe_id=obj
+        ).exists()
+
+    def get_is_in_shopping_cart(self, obj):
+        request = self.context.get('request')
+        if request is None or request.user.is_anonymous:
+            return False
+        return Shopping_list.objects.filter(
+            user=request.user, recipe_id=obj
+        ).exists()
 
 
 class IngredientinRecipeCreate(serializers.ModelSerializer):
@@ -152,8 +181,12 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
             )
         return super().create(validated_data)
 
-    # def to_representation(self, instance):
-    #     return super().to_representation(instance)
+    def to_representation(self, instance):
+        return RecipeSerializer(
+            instance,
+            context={
+                'request': self.context.get('request')
+            }).data
 
 
 class SlistSerializer(serializers.ModelSerializer):
