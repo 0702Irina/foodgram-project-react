@@ -12,6 +12,22 @@ from rest_framework import serializers
 from djoser.serializers import UserSerializer
 
 
+REFOLLOW = 'Ты уже подписан на этого автора'
+FOLLOW_YOURSELF = 'Прости, но ты не можешь подписаться на себя 💔'
+
+
+class UserCreateSerializer(UserSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'username',
+            'first_name',
+            'last_name',
+            'password',
+        )
+
+
 class UserSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField()
 
@@ -46,9 +62,33 @@ class FavoritesSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
+    user = serializers.SlugRelatedField(
+        queryset=User.objects.all(),
+        slug_field='username',
+        default=serializers.CurrentUserDefault(),
+    )
+    following = serializers.SlugRelatedField(
+        queryset=User.objects.all(),
+        slug_field='username',
+    )
+
     class Meta:
+        fields = ('user', 'following')
         model = Follow
-        fields = '__all__'
+        validators = (
+            serializers.UniqueTogetherValidator(
+                queryset=Follow.objects.all(),
+                fields=('user', 'following'),
+                message=REFOLLOW,
+            ),
+        )
+
+    def validate(self, data):
+        if data['user'] == data['following']:
+            raise serializers.ValidationError(
+                FOLLOW_YOURSELF
+            )
+        return data
 
 
 class TagSerializer(serializers.ModelSerializer):

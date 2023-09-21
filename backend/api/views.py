@@ -15,11 +15,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
-
 from api.filters import IngredientFilter
 from api.permissions import IsAdminOrReadOnly
 from api.serializers import (
     RecipeCreateSerializers,
+    UserCreateSerializer,
     IngredientSerializer,
     FavoritesSerializer,
     FollowSerializer,
@@ -34,6 +34,11 @@ class CustomUserViewSet(UserViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return UserCreateSerializer
+        return UserSerializer
+
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
@@ -43,7 +48,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     # permission_classes = (IsAuthenticatedOrReadOnly,IsAuthor)
     pagination_class = PageNumberPagination
 
-    def get_qqueryset(self):
+    def get_queryset(self):
         recipes = Recipe.objects.prefetch_related(
             'recipengredient', 'tags'
         ).all()
