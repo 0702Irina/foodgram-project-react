@@ -12,10 +12,6 @@ from rest_framework import serializers
 from djoser.serializers import UserSerializer
 
 
-REFOLLOW = 'Ты уже подписан на этого автора'
-FOLLOW_YOURSELF = 'Прости, но ты не можешь подписаться на себя 💔'
-
-
 class UserCreateSerializer(UserSerializer):
     class Meta:
         model = User
@@ -63,34 +59,62 @@ class FavoritesSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class FollowSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(
-        queryset=User.objects.all(),
-        slug_field='username',
-        default=serializers.CurrentUserDefault(),
-    )
-    following = serializers.SlugRelatedField(
-        queryset=User.objects.all(),
-        slug_field='username',
-    )
-
+class RecipeShortSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('user', 'following')
-        model = Follow
-        validators = (
-            serializers.UniqueTogetherValidator(
-                queryset=Follow.objects.all(),
-                fields=('user', 'following'),
-                message=REFOLLOW,
-            ),
+        model = Recipe
+        fields = (
+            'id',
+            'name',
+            'image',
+            'cooking_time'
         )
 
-    def validate(self, data):
-        if data['user'] == data['following']:
-            raise serializers.ValidationError(
-                FOLLOW_YOURSELF
-            )
-        return data
+
+class FollowSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(
+        source='author.id')
+    email = serializers.EmailField(
+        source='author.email')
+    username = serializers.CharField(
+        source='author.username')
+    first_name = serializers.CharField(
+        source='author.first_name')
+    last_name = serializers.CharField(
+        source='author.last_name')
+    recipes = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField(
+        read_only=True)
+    recipes_count = serializers.SerializerMethodField(
+        read_only=True)
+
+    class Meta:
+        model = Follow
+        fields = (
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'recipes',
+            'recipes_count',
+            'is_subscribed',
+        )
+
+    def get_is_subscribed(self, obj):
+        return Follow.objects.filter(
+            user=obj.user, author=obj.author
+        ).exists()
+
+    def get_recipes(self, obj):
+        request = self.context.get('request')
+        limit = request.GET.get('recipes_limit')
+        queryset = Recipe.objects.filter(author=obj.author)
+        if limit:
+            queryset = queryset[:int(limit)]
+        return RecipeShortSerializer(queryset, many=True).data
+
+    def get_recipes_count(self, obj):
+        return Recipe.objects.filter(author=obj.author).count()
 
 
 class TagSerializer(serializers.ModelSerializer):

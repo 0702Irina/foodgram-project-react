@@ -29,6 +29,6 @@ python manage.py createsuperuser
 f
 Docker
 sudo docker-compose up
-Token 408a34f04bbc372de94b46156109603a914befe2
+Token c41ce0ba71b6ccc52aa6f8e1d61cf96798c51c8f
 root
     "new_password": "1007",

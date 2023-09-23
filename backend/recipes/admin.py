@@ -16,7 +16,7 @@ from recipes.models import (
 class FollowAdmin(admin.ModelAdmin):
     list_display = (
         'user',
-        'following',
+        'author',
     )
     search_fields = ('user',)
     list_filter = ('user',)

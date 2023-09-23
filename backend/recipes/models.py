@@ -96,7 +96,7 @@ class Follow(models. Model):
         verbose_name='Подписчик',
         help_text='Укажите подписчика',
     )
-    following = models.ForeignKey(
+    author = models.ForeignKey(
         User,
         related_name='following',
         on_delete=models.CASCADE,
@@ -111,12 +111,12 @@ class Follow(models. Model):
         constraints = (
             models.UniqueConstraint(
                 name='unique_follow',
-                fields=('user', 'following')
+                fields=('user', 'author')
             ),
         )
 
     def __str__(self) -> str:
-        return f'{self.user} follows {self.following}'
+        return f'{self.user} follows {self.author}'
 
 
 class Recipe(models.Model):
