@@ -31,7 +31,7 @@ class User(AbstractUser):
         unique=True,
         max_length=200,
     )
-    is_subscriptions = models.BooleanField(default=False, blank=True,)
+    # is_subscriptions = models.BooleanField(default=False, blank=True,)
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -197,43 +197,45 @@ class RecipeIngredient(models.Model):
         verbose_name_plural = 'Ингредиенты для рецепта'
 
 
-class Shopping_list(models. Model):
+# class Shopping_list(models. Model):
+#     name = models.CharField(
+#         verbose_name='Список покупок',
+#         max_length=200
+#     )
+#     recipe = models.ForeignKey(
+#         Recipe,
+#         on_delete=models.CASCADE,
+#         null=True,
+#     )
+#     user = models.ForeignKey(
+#         User,
+#         related_name='sl',
+#         on_delete=models.CASCADE,
+#     )
+
+#     class Meta:
+#         verbose_name = 'Список покупок'
+#         verbose_name_plural = 'Списки покупок'
+
+
+class ActionsForRecipe(models. Model):
     name = models.CharField(
-        verbose_name='Список покупок',
+        verbose_name='Действия',
         max_length=200
-    )
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        null=True,
     )
     user = models.ForeignKey(
         User,
-        related_name='sl',
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        verbose_name = 'Список покупок'
-        verbose_name_plural = 'Списки покупок'
-
-
-class Favorites(models. Model):
-    name = models.CharField(
-        verbose_name='Избранные рецепты',
-        max_length=200
-    )
-    user = models.ForeignKey(
-        User,
-        related_name='faworites',
+        related_name='actions',
+        verbose_name='Пользователь',
         on_delete=models.CASCADE,
     )
     recipe = models.ForeignKey(
         Recipe,
+        verbose_name='Рецепт',
         on_delete=models.CASCADE,
         null=True,
     )
 
     class Meta:
-        verbose_name = 'Избранный рецепт'
-        verbose_name_plural = 'Избранные рецепты'
+        verbose_name = 'Действие'
+        verbose_name_plural = 'Дейстия'

@@ -1,10 +1,9 @@
 from django.contrib import admin
 
 from recipes.models import (
+    ActionsForRecipe,
     RecipeIngredient,
-    Shopping_list,
     Ingredient,
-    Favorites,
     Follow,
     Recipe,
     Tag,
@@ -57,7 +56,7 @@ class IngredientAdmin(admin.ModelAdmin):
     verbose_name = 'Ингридиент',
 
 
-@admin.register(Shopping_list)
+@admin.register(ActionsForRecipe)
 class Shopping_listAdmin(admin.ModelAdmin):
     list_display = (
         'user',
@@ -83,7 +82,6 @@ class TagAdmin(admin.ModelAdmin):
     verbose_name = 'Тег',
 
 
-@admin.register(Favorites)
 class FavoritesAdmin(admin.ModelAdmin):
     list_display = (
         'user',
