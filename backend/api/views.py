@@ -126,8 +126,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
             model.objects.filter(user=user, recipe__id=pk).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=True, methods=['post', 'delete'],
-            permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=('post', 'delete'),
+            permission_classes=(IsAuthenticated, ))
     def favorite(self, request, pk=None):
         if self.request.method == 'DELETE':
             context = {
@@ -136,14 +136,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return Response(context, status=status.HTTP_204_NO_CONTENT)
         return self.action_for_recipes(ActionsForRecipe, request.user, pk)
 
-    @action(detail=True, methods=['post', 'delete'],
-            permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=('post', 'delete'),
+            permission_classes=(IsAuthenticated, ))
     def shopping_cart(self, request, pk=None):
         if self.request.method == 'DELETE':
             context = {
                 "errors": "Рецепт удален из списка покупок"
             }
-            # if request.ingredient.name == ingri
             return Response(context, status=status.HTTP_204_NO_CONTENT)
         return self.action_for_recipes(ActionsForRecipe, request.user, pk)
 

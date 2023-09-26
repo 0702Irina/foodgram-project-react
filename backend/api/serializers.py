@@ -25,7 +25,7 @@ class UserCreateSerializer(UserSerializer):
 
 
 class UserSerializer(UserSerializer):
-    # is_subscribed = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -35,14 +35,14 @@ class UserSerializer(UserSerializer):
             'username',
             'first_name',
             'last_name',
-            # 'is_subscribed'
+            'is_subscribed'
         )
 
-    # def get_is_subscribed(self, obj):
-    #     user = self.context.get('request').user
-    #     if user.is_anonymous:
-    #         return False
-    #     return Follow.objects.filter(user=user, author=obj.id).exists()
+    def get_is_subscribed(self, obj):
+        user = self.context.get('request').user
+        if user.is_anonymous:
+            return False
+        return Follow.objects.filter(user=user, author=obj.id).exists()
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -82,8 +82,8 @@ class FollowSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(
         source='author.last_name')
     recipes = serializers.SerializerMethodField()
-    # is_subscribed = serializers.SerializerMethodField(
-    #     read_only=True)
+    is_subscribed = serializers.SerializerMethodField(
+        read_only=True)
     recipes_count = serializers.SerializerMethodField(
         read_only=True)
 
@@ -97,14 +97,14 @@ class FollowSerializer(serializers.ModelSerializer):
             'email',
             'recipes',
             'recipes_count',
-            # 'is_subscribed',
+            'is_subscribed',
         )
 
-    # def get_is_subscribed(self, obj):
-    #     request = self.context.get('request')
-    #     return Follow.objects.filter(
-    #         user=request.user, author=request.author
-    #     ).exists()
+    def get_is_subscribed(self, obj):
+        request = self.context.get('request')
+        return Follow.objects.filter(
+            user=request.user, author=request.author
+        ).exists()
 
     def get_recipes(self, obj):
         request = self.context.get('request')
