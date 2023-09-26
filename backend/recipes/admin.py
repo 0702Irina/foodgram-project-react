@@ -3,6 +3,7 @@ from django.contrib import admin
 from recipes.models import (
     ActionsForRecipe,
     RecipeIngredient,
+    Shopping_list,
     Ingredient,
     Follow,
     Recipe,
@@ -56,7 +57,7 @@ class IngredientAdmin(admin.ModelAdmin):
     verbose_name = 'Ингридиент',
 
 
-@admin.register(ActionsForRecipe)
+@admin.register(Shopping_list)
 class Shopping_listAdmin(admin.ModelAdmin):
     list_display = (
         'user',
@@ -82,12 +83,14 @@ class TagAdmin(admin.ModelAdmin):
     verbose_name = 'Тег',
 
 
+@admin.register(ActionsForRecipe)
 class FavoritesAdmin(admin.ModelAdmin):
     list_display = (
         'user',
         'name',
         'recipe'
     )
+    verbose_name = 'Избранное'
 
 
 @admin.register(User)

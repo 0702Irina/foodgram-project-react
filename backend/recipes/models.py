@@ -197,30 +197,9 @@ class RecipeIngredient(models.Model):
         verbose_name_plural = 'Ингредиенты для рецепта'
 
 
-# class Shopping_list(models. Model):
-#     name = models.CharField(
-#         verbose_name='Список покупок',
-#         max_length=200
-#     )
-#     recipe = models.ForeignKey(
-#         Recipe,
-#         on_delete=models.CASCADE,
-#         null=True,
-#     )
-#     user = models.ForeignKey(
-#         User,
-#         related_name='sl',
-#         on_delete=models.CASCADE,
-#     )
-
-#     class Meta:
-#         verbose_name = 'Список покупок'
-#         verbose_name_plural = 'Списки покупок'
-
-
 class ActionsForRecipe(models. Model):
     name = models.CharField(
-        verbose_name='Действия',
+        verbose_name='Название',
         max_length=200
     )
     user = models.ForeignKey(
@@ -237,5 +216,12 @@ class ActionsForRecipe(models. Model):
     )
 
     class Meta:
-        verbose_name = 'Действие'
-        verbose_name_plural = 'Дейстия'
+        verbose_name = 'Избранный'
+        verbose_name_plural = 'Избранные'
+
+
+class Shopping_list(ActionsForRecipe):
+
+    class Meta:
+        verbose_name = 'Список покупок'
+        verbose_name_plural = 'Списки покупок'
