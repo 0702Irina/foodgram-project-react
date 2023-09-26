@@ -14,6 +14,7 @@ from api.filters import IngredientFilter
 from api.permissions import IsAuthor, IsAdminOrReadOnly
 from api.serializers import (
     RecipeCreateSerializers,
+    RecipeShortSerializer,
     UserCreateSerializer,
     IngredientSerializer,
     FollowSerializer,
@@ -118,7 +119,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if self.request.method == 'POST':
             recipe = get_object_or_404(Recipe, id=pk)
             model.objects.create(user=user, recipe=recipe)
-            serializer = RecipeSerializer(recipe)
+            serializer = RecipeShortSerializer(recipe)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if self.request.method == 'DELETE':
@@ -128,11 +129,22 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post', 'delete'],
             permission_classes=[IsAuthenticated])
     def favorite(self, request, pk=None):
-        return self.action_for_recipe(ActionsForRecipe, request.user, pk)
+        if self.request.method == 'DELETE':
+            context = {
+                "errors": "Рецепт удален из избранного"
+            }
+            return Response(context, status=status.HTTP_204_NO_CONTENT)
+        return self.action_for_recipes(ActionsForRecipe, request.user, pk)
 
     @action(detail=True, methods=['post', 'delete'],
             permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk=None):
+        if self.request.method == 'DELETE':
+            context = {
+                "errors": "Рецепт удален из списка покупок"
+            }
+            # if request.ingredient.name == ingri
+            return Response(context, status=status.HTTP_204_NO_CONTENT)
         return self.action_for_recipes(ActionsForRecipe, request.user, pk)
 
 
