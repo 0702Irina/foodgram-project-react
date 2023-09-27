@@ -31,7 +31,6 @@ class User(AbstractUser):
         unique=True,
         max_length=200,
     )
-    # is_subscriptions = models.BooleanField(default=False, blank=True,)
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -198,10 +197,6 @@ class RecipeIngredient(models.Model):
 
 
 class ActionsForRecipe(models. Model):
-    name = models.CharField(
-        verbose_name='Название',
-        max_length=200
-    )
     user = models.ForeignKey(
         User,
         related_name='actions',
@@ -210,6 +205,7 @@ class ActionsForRecipe(models. Model):
     )
     recipe = models.ForeignKey(
         Recipe,
+        related_name='actions',
         verbose_name='Рецепт',
         on_delete=models.CASCADE,
         null=True,

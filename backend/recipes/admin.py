@@ -7,8 +7,8 @@ from recipes.models import (
     Ingredient,
     Follow,
     Recipe,
-    Tag,
-    User
+    User,
+    Tag
 )
 
 
@@ -32,6 +32,7 @@ class RecipeIngredientInline(admin.TabularInline):
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'name',
         'image',
         'text',
@@ -62,7 +63,6 @@ class Shopping_listAdmin(admin.ModelAdmin):
     list_display = (
         'user',
         'recipe',
-        'name'
     )
     search_fields = ('user',)
     list_filter = ('user',)
@@ -87,7 +87,6 @@ class TagAdmin(admin.ModelAdmin):
 class FavoritesAdmin(admin.ModelAdmin):
     list_display = (
         'user',
-        'name',
         'recipe'
     )
     verbose_name = 'Избранное'

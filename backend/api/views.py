@@ -1,17 +1,21 @@
 from django.shortcuts import get_object_or_404
-
-from django_filters.rest_framework import DjangoFilterBackend
+from django.http import HttpResponse
+from django.db.models import Sum
 
 from djoser.views import UserViewSet
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from rest_framework import viewsets, status
-# from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from api.filters import IngredientFilter
-from api.permissions import IsAuthor, IsAdminOrReadOnly
+from api.permissions import (
+    IsAdminOrReadOnly,
+    IsAuthor
+)
 from api.serializers import (
     RecipeCreateSerializers,
     RecipeShortSerializer,
@@ -24,6 +28,7 @@ from api.serializers import (
 )
 from recipes.models import (
     ActionsForRecipe,
+    RecipeIngredient,
     Ingredient,
     Follow,
     Recipe,
@@ -126,6 +131,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
             model.objects.filter(user=user, recipe__id=pk).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def create_txt_cart(self, ingredients):
+        slist = 'Список покупок'
+        for ingredient in ingredients:
+            slist += (
+                f"\n{ingredient['ingredient__name']} "
+                f"({ingredient['ingredient__measurement_unit']}) - "
+                f"{ingredient['amount']}"
+            )
+        return slist
+
     @action(detail=True, methods=('post', 'delete'),
             permission_classes=(IsAuthenticated, ))
     def favorite(self, request, pk=None):
@@ -145,6 +160,20 @@ class RecipeViewSet(viewsets.ModelViewSet):
             }
             return Response(context, status=status.HTTP_204_NO_CONTENT)
         return self.action_for_recipes(ActionsForRecipe, request.user, pk)
+
+    @action(detail=False, methods=('GET', ))
+    def download_shopping_cart(self, request):
+        ingredients = RecipeIngredient.objects.filter(
+            recipe__actions__user=request.user
+        ).order_by('ingredient__name').values(
+            'ingredient__name',
+            'ingredient__measurement_unit'
+        ).annotate(amount=Sum('amount'))
+        slist = self.create_txt_cart(ingredients)
+        file = 'slist.txt'
+        response = HttpResponse(slist, content_type='text/plain')
+        response['Content-Disposition'] = f"attachment; filename='{file}'"
+        return response
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
