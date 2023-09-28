@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
 from colorfield.fields import ColorField
 
 
@@ -35,7 +36,7 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-        ordering = ['username']
+        ordering = ('username',)
 
     def __str__(self):
         return self.username[:20]
@@ -69,10 +70,10 @@ class Tag(models. Model):
         default='#FF0000',
         format="hexa"
     )
-    COLOR_PALETTE = [
+    COLOR_PALETTE = (
         ("#FFFFFF", "white", ),
         ("#000000", "black", ),
-    ]
+    )
     slug = models.SlugField(
         'Слаг',
         unique=True,
@@ -90,14 +91,14 @@ class Tag(models. Model):
 class Follow(models. Model):
     user = models.ForeignKey(
         User,
-        related_name='follower',
+        related_name='followers',
         on_delete=models.CASCADE,
         verbose_name='Подписчик',
         help_text='Укажите подписчика',
     )
     author = models.ForeignKey(
         User,
-        related_name='following',
+        related_name='followings',
         on_delete=models.CASCADE,
         verbose_name='Автор рецепта',
         help_text='Укажите на кого подписываемся',
@@ -125,7 +126,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         Tag,
-        related_name='recipe',
+        related_name='recipes',
         verbose_name='Тег',
     )
     text = models.TextField(
@@ -134,7 +135,7 @@ class Recipe(models.Model):
     )
     ingredients = models.ManyToManyField(
         Ingredient,
-        related_name='recipe',
+        related_name='recipes',
         through='RecipeIngredient',
         verbose_name='Название ингридиента',
         help_text='Выберите название ингридиента из списка',
@@ -146,7 +147,7 @@ class Recipe(models.Model):
     )
     author = models.ForeignKey(
         User,
-        related_name='recipe',
+        related_name='recipes',
         on_delete=models.CASCADE,
         null=True,
         verbose_name='Автор рецепта',
@@ -178,7 +179,7 @@ class Recipe(models.Model):
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         Recipe,
-        related_name='recipengredient',
+        related_name='recipengredients',
         on_delete=models.CASCADE,
         verbose_name='Рецепт'
     )

@@ -1,7 +1,5 @@
 python manage.py runserver
 
-cd backend
-
 Виртуальное окружение
 python -m venv venv
 source venv/Scripts/activate
@@ -26,9 +24,6 @@ python manage.py startapp (приложение) создание приложе
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser
-f
+
 Docker
-sudo docker-compose up
-Token c41ce0ba71b6ccc52aa6f8e1d61cf96798c51c8f
-root
-    "new_password": "1007",
+sudo docker compose up

@@ -1,19 +1,16 @@
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.db.models import Sum
-
-from djoser.views import UserViewSet
-
 from django_filters.rest_framework import DjangoFilterBackend
-
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
+from djoser.views import UserViewSet
+
 from api.filters import IngredientFilter, RecipeFilter
 from api.permissions import IsAuthorOrReadOnly
-
 from api.serializers import (
     RecipeCreateSerializers,
     RecipeShortSerializer,
@@ -33,14 +30,16 @@ from recipes.models import (
     User,
     Tag,
 )
-
-REFOLLOW = 'Ты уже подписан на этого автора'
-FOLLOW_YOURSELF = 'Очень жаль, но ты не можешь подписаться на себя 💔'
+from backend_food import (
+    REFOLLOW,
+    FOLLOW_YOURSELF,
+    FILE_SL,
+    CONTENT
+)
 
 
 class CustomUserViewSet(UserViewSet):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -74,7 +73,7 @@ class CustomUserViewSet(UserViewSet):
         follow = Follow.objects.filter(
             user=request.user,
             author=get_object_or_404(User, id=id),
-        )
+        ).exists()
         follow.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -84,8 +83,7 @@ class CustomUserViewSet(UserViewSet):
         serializer_class=(FollowSerializer, )
     )
     def subscriptions(self, request):
-        user = request.user
-        queryset = Follow.objects.filter(user=user)
+        queryset = request.user.followers.all()
         pages = self.paginate_queryset(queryset)
         serializer = FollowSerializer(
             pages,
@@ -96,8 +94,6 @@ class CustomUserViewSet(UserViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    queryset = Recipe.objects.all()
-    serializer_class = RecipeSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     permission_classes = (IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly)
@@ -125,7 +121,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     def create_txt_cart(self, ingredients):
-        slist = 'Список покупок'
+        slist = 'Shopping list'
         for ingredient in ingredients:
             slist += (
                 f"\n{ingredient['ingredient__name']} "
@@ -139,7 +135,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def favorite(self, request, pk=None):
         if self.request.method == 'DELETE':
             context = {
-                "errors": "Рецепт удален из избранного"
+                "errors": "Recipe removed from favorites"
             }
             return Response(context, status=status.HTTP_204_NO_CONTENT)
         return self.action_for_recipes(ActionsForRecipe, request.user, pk)
@@ -149,7 +145,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def shopping_cart(self, request, pk=None):
         if self.request.method == 'DELETE':
             context = {
-                "errors": "Рецепт удален из списка покупок"
+                "errors": "Recipe removed from shopping list"
             }
             return Response(context, status=status.HTTP_204_NO_CONTENT)
         return self.action_for_recipes(ActionsForRecipe, request.user, pk)
@@ -163,8 +159,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
             'ingredient__measurement_unit'
         ).annotate(amount=Sum('amount'))
         slist = self.create_txt_cart(ingredients)
-        file = 'slist.txt'
-        response = HttpResponse(slist, content_type='text/plain')
+        file = FILE_SL
+        response = HttpResponse(slist, content_type=CONTENT)
         response['Content-Disposition'] = f"attachment; filename='{file}'"
         return response
 

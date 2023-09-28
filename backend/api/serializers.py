@@ -1,3 +1,8 @@
+from rest_framework import serializers
+
+from djoser.serializers import UserSerializer
+from drf_extra_fields.fields import Base64ImageField
+
 from recipes.models import (
     ActionsForRecipe,
     RecipeIngredient,
@@ -7,10 +12,6 @@ from recipes.models import (
     User,
     Tag,
 )
-
-from rest_framework import serializers
-from djoser.serializers import UserSerializer
-from drf_extra_fields.fields import Base64ImageField
 
 
 class UserCreateSerializer(UserSerializer):
@@ -26,7 +27,9 @@ class UserCreateSerializer(UserSerializer):
 
 
 class UserSerializer(UserSerializer):
-    is_subscribed = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField(
+        method_name='get_is_subscribed'
+    )
 
     class Meta:
         model = User
@@ -82,11 +85,11 @@ class FollowSerializer(serializers.ModelSerializer):
         source='author.first_name')
     last_name = serializers.CharField(
         source='author.last_name')
-    recipes = serializers.SerializerMethodField()
+    recipes = serializers.SerializerMethodField(method_name='get_recipes')
     is_subscribed = serializers.SerializerMethodField(
-        read_only=True)
+        read_only=True, method_name='get_is_subscribed')
     recipes_count = serializers.SerializerMethodField(
-        read_only=True)
+        read_only=True, method_name='get_recipes_count')
 
     class Meta:
         model = Follow
@@ -110,13 +113,13 @@ class FollowSerializer(serializers.ModelSerializer):
     def get_recipes(self, obj):
         request = self.context.get('request')
         limit = request.GET.get('recipes_limit')
-        queryset = Recipe.objects.filter(author=obj.author)
+        queryset = obj.author.recipes.all()
         if limit:
             queryset = queryset[:int(limit)]
         return RecipeShortSerializer(queryset, many=True).data
 
     def get_recipes_count(self, obj):
-        return Recipe.objects.filter(author=obj.author).count()
+        return obj.author.recipes.all().count()
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -146,8 +149,12 @@ class RecipeSerializer(serializers.ModelSerializer):
         many=True,
         source='recipengredient',
     )
-    is_favorited = serializers.SerializerMethodField()
-    is_in_shopping_cart = serializers.SerializerMethodField()
+    is_favorited = serializers.SerializerMethodField(
+        method_name='get_is_favorited'
+    )
+    is_in_shopping_cart = serializers.SerializerMethodField(
+        method_name='get_is_in_shopping_cart'
+    )
 
     class Meta:
         model = Recipe
@@ -205,3 +212,12 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
             context={
                 'request': self.context.get('request')
             }).data
+
+    def validate_ingredient_amout():
+        pass
+
+    def validate_ingredient_unique(self):
+        pass
+
+    def validate_cooking_time():
+        pass
