@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 
 from djoser.serializers import UserSerializer
@@ -185,7 +186,7 @@ class IngredientinRecipeCreate(serializers.ModelSerializer):
 
     class Meta:
         model = RecipeIngredient
-        fields = '__all__'
+        fields = ('id', 'amount')
 
 
 class RecipeCreateSerializers(serializers.ModelSerializer):
@@ -195,16 +196,26 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
         model = Recipe
         fields = ('name', 'cooking_time', 'text', 'tags', 'ingredients')
 
+    def create_ingredients(self, recipe, ingredients):
+        ingredient_objects = (
+            RecipeIngredient(
+                ingredient=ingredient['ingredient'],
+                recipe=recipe,
+                amount=ingredient['amount']
+            )
+            for ingredient in ingredients
+        )
+        RecipeIngredient.objects.bulk_create(ingredient_objects)
+
+    @transaction.atomic
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')
-        instance = super().create(validated_data)
-        for ingredient_data in ingredients:
-            RecipeCreateSerializers(
-                recipe=instance,
-                ingredient=ingredient_data('ingredient'),
-                amount=ingredient_data('amount')
-            )
-        return super().create(validated_data)
+        tags = validated_data.pop('tags')
+        author = self.context.get('request').user
+        recipe = Recipe.objects.create(author=author, **validated_data)
+        recipe.tags.set(tags)
+        self.create_ingredients(recipe, ingredients)
+        return recipe
 
     def to_representation(self, instance):
         return RecipeSerializer(
@@ -213,27 +224,23 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                 'request': self.context.get('request')
             }).data
 
-    def validate_ingredient_amout(self, data):
-        if not 1 <= data <= 30:
-            raise serializers.ValidationError(
-                'The amount of ingredient must be from 1 to 30.'
-            )
-        return data
-
-    def validate_ingredient_unique(self, data):
-        if not data:
+    def validate_ingredients(self, ingredients):
+        if not ingredients:
             raise serializers.ValidationError(
                 'Recipe must have at least 1 ingredient'
             )
         ingredients_list = []
-        for ingredient in data:
-            ingredient_id = ingredient['id']
-            if ingredient_id in ingredients_list:
+        for ingredient in ingredients:
+            if ingredient in ingredients_list:
                 raise serializers.ValidationError(
                     'You have already added this ingredient'
                 )
-            ingredients_list.append.ingredient_id
-        return data
+            if not 1 <= int(ingredient['amount']) <= 30:
+                raise serializers.ValidationError(
+                    'The amount of ingredient must be from 1 to 30.'
+                )
+            ingredients_list.append(ingredient)
+        return ingredients
 
     def validate_cooking_time(self, data):
         if not 1 <= data <= 600:
