@@ -3,6 +3,8 @@ from django.db import models
 
 from colorfield.fields import ColorField
 
+from backend_food.settings import CHOICES
+
 
 class User(AbstractUser):
     username = models.CharField(
@@ -10,27 +12,32 @@ class User(AbstractUser):
         unique=True,
         blank=True,
         max_length=200,
+        help_text='Укажите логин',
     )
     password = models.CharField(
         'Пароль',
         max_length=200,
+        help_text='Укажите пароль',
 
     )
     first_name = models.CharField(
         'Имя',
         blank=True,
         max_length=200,
+        help_text='Укажите имя',
     )
     last_name = models.CharField(
         'Фамилия',
         blank=True,
         max_length=200,
+        help_text='Укажите фамилию',
 
     )
     email = models.EmailField(
         'Email',
         unique=True,
         max_length=200,
+        help_text='Укажите email',
     )
 
     class Meta:
@@ -44,12 +51,16 @@ class User(AbstractUser):
 
 class Ingredient(models. Model):
     name = models.CharField(
-        'Ингридиент',
-        max_length=200
+        'Название',
+        max_length=200,
+        unique=True,
+        help_text='Укажите название ингредиента',
     )
     measurement_unit = models.CharField(
-        'Единицы измерения',
+        'Единица измерения',
         max_length=200,
+        choices=CHOICES,
+        help_text='Выберите единицу измерения',
     )
 
     class Meta:
@@ -62,13 +73,16 @@ class Ingredient(models. Model):
 
 class Tag(models. Model):
     name = models.CharField(
-        'Тег',
+        'Название',
         unique=True,
         max_length=200,
+        help_text='Укажите название'
     )
     color = ColorField(
+        'Цвет',
         default='#FF0000',
-        format="hexa"
+        format="hexa",
+        help_text='Выберите цвет, нажмите на цветной квадрат'
     )
     COLOR_PALETTE = (
         ("#FFFFFF", "white", ),
@@ -78,6 +92,7 @@ class Tag(models. Model):
         'Слаг',
         unique=True,
         max_length=200,
+        help_text='Укажите слаг'
     )
 
     class Meta:
@@ -101,7 +116,7 @@ class Follow(models. Model):
         related_name='followings',
         on_delete=models.CASCADE,
         verbose_name='Автор рецепта',
-        help_text='Укажите на кого подписываемся',
+        help_text='Укажите на кого подписывается пользователь',
     )
 
     class Meta:
@@ -121,13 +136,16 @@ class Follow(models. Model):
 
 class Recipe(models.Model):
     name = models.CharField(
-        verbose_name='Название рецепта',
-        max_length=200
+        'Название',
+        max_length=200,
+        help_text='Укажите название рецепта',
+
     )
     tags = models.ManyToManyField(
         Tag,
         related_name='recipes',
         verbose_name='Тег',
+        help_text='Выберите тег',
     )
     text = models.TextField(
         verbose_name='Способ приготовления',
@@ -138,7 +156,7 @@ class Recipe(models.Model):
         related_name='recipes',
         through='RecipeIngredient',
         verbose_name='Название ингридиента',
-        help_text='Выберите название ингридиента из списка',
+        help_text='Выберите ингридиент',
     )
     cooking_time = models.PositiveIntegerField(
         null=True,
@@ -151,7 +169,7 @@ class Recipe(models.Model):
         on_delete=models.CASCADE,
         null=True,
         verbose_name='Автор рецепта',
-        help_text='Укажите автора рецепта',
+        help_text='Выберите автора рецепта',
     )
     pub_date = models.DateTimeField(
         auto_now_add=True,
@@ -186,15 +204,17 @@ class RecipeIngredient(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        verbose_name='Ингредиент'
+        verbose_name='Ингредиент',
+        help_text='Выберите ингредиент',
     )
     amount = models.PositiveIntegerField(
-        verbose_name='Количество'
+        verbose_name='Количество',
+        help_text='Введите количество ингедиента',
     )
 
     class Meta:
-        verbose_name = 'Ингредиент для рецепта'
-        verbose_name_plural = 'Ингредиенты для рецепта'
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
 
 
 class ActionsForRecipe(models. Model):

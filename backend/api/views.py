@@ -30,7 +30,7 @@ from recipes.models import (
     User,
     Tag,
 )
-from backend_food import (
+from backend_food.settings import (
     REFOLLOW,
     FOLLOW_YOURSELF,
     FILE_SL,
@@ -100,7 +100,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         recipes = Recipe.objects.prefetch_related(
-            'recipengredient', 'tags'
+            'recipengredients', 'tags'
         ).all()
         return recipes
 

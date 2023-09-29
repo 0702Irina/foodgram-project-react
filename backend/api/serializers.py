@@ -147,7 +147,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     ingredients = RecipeIngredientSerializer(
         many=True,
-        source='recipengredient',
+        source='recipengredients',
     )
     is_favorited = serializers.SerializerMethodField(
         method_name='get_is_favorited'
@@ -213,11 +213,31 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                 'request': self.context.get('request')
             }).data
 
-    def validate_ingredient_amout():
-        pass
+    def validate_ingredient_amout(self, data):
+        if not 1 <= data <= 30:
+            raise serializers.ValidationError(
+                'The amount of ingredient must be from 1 to 30.'
+            )
+        return data
 
-    def validate_ingredient_unique(self):
-        pass
+    def validate_ingredient_unique(self, data):
+        if not data:
+            raise serializers.ValidationError(
+                'Recipe must have at least 1 ingredient'
+            )
+        ingredients_list = []
+        for ingredient in data:
+            ingredient_id = ingredient['id']
+            if ingredient_id in ingredients_list:
+                raise serializers.ValidationError(
+                    'You have already added this ingredient'
+                )
+            ingredients_list.append.ingredient_id
+        return data
 
-    def validate_cooking_time():
-        pass
+    def validate_cooking_time(self, data):
+        if not 1 <= data <= 600:
+            raise serializers.ValidationError(
+                'The cooking time should be from 1 to 600 minutes.'
+            )
+        return data
