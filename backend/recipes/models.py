@@ -1,9 +1,16 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from colorfield.fields import ColorField
 
-from backend_food.settings import CHOICES
+from backend_food.settings import (
+    CHOICES,
+    COLOR_PALETTE,
+    ONE,
+    MAX_AMOUNT,
+    MAX_TIME
+)
 
 
 class User(AbstractUser):
@@ -81,12 +88,9 @@ class Tag(models. Model):
     color = ColorField(
         'Цвет',
         default='#FF0000',
-        format="hexa",
+        format='hexa',
+        samples=COLOR_PALETTE,
         help_text='Выберите цвет, нажмите на цветной квадрат'
-    )
-    COLOR_PALETTE = (
-        ("#FFFFFF", "white", ),
-        ("#000000", "black", ),
     )
     slug = models.SlugField(
         'Слаг',
@@ -158,8 +162,10 @@ class Recipe(models.Model):
         verbose_name='Название ингридиента',
         help_text='Выберите ингридиент',
     )
-    cooking_time = models.PositiveIntegerField(
+    cooking_time = models.PositiveSmallIntegerField(
         null=True,
+        validators=[MinValueValidator(ONE),
+                    MaxValueValidator(MAX_TIME)],
         verbose_name='Время приготовления блюда',
         help_text='Введите время приготовления блюда ',
     )
@@ -207,7 +213,9 @@ class RecipeIngredient(models.Model):
         verbose_name='Ингредиент',
         help_text='Выберите ингредиент',
     )
-    amount = models.PositiveIntegerField(
+    amount = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(ONE),
+                    MaxValueValidator(MAX_AMOUNT)],
         verbose_name='Количество',
         help_text='Введите количество ингедиента',
     )

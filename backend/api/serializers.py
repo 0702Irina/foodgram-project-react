@@ -13,6 +13,11 @@ from recipes.models import (
     User,
     Tag,
 )
+from backend_food.settings import (
+    ONE,
+    MAX_AMOUNT,
+    MAX_TIME
+)
 
 
 class UserCreateSerializer(UserSerializer):
@@ -227,7 +232,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
     def validate_ingredients(self, ingredients):
         if not ingredients:
             raise serializers.ValidationError(
-                'Recipe must have at least 1 ingredient'
+                f'Recipe must have at least {ONE} ingredient'
             )
         ingredients_list = []
         for ingredient in ingredients:
@@ -235,16 +240,17 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     'You have already added this ingredient'
                 )
-            if not 1 <= int(ingredient['amount']) <= 30:
+            if not ONE <= int(ingredient['amount']) <= MAX_AMOUNT:
                 raise serializers.ValidationError(
-                    'The amount of ingredient must be from 1 to 30.'
+                    f'\n The amount of ingredient'
+                    f'must be from {ONE} to {MAX_AMOUNT}.'
                 )
             ingredients_list.append(ingredient)
         return ingredients
 
     def validate_cooking_time(self, data):
-        if not 1 <= data <= 600:
+        if not ONE <= data <= MAX_TIME:
             raise serializers.ValidationError(
-                'The cooking time should be from 1 to 600 minutes.'
+                f'The cooking time should be from {ONE} to {MAX_TIME} minutes.'
             )
         return data

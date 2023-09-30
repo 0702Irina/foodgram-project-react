@@ -101,7 +101,8 @@ USE_L10N = True
 USE_TZ = True
 
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static_backend/'
+STATIC_ROOT = BASE_DIR / 'static_backend'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
@@ -132,6 +133,9 @@ DJOSER = {
 
 REFOLLOW = 'Such a subscription already exists'
 FOLLOW_YOURSELF = 'You can not subscribe to yourself'
+ONE = 1
+MAX_AMOUNT = 30
+MAX_TIME = 600
 FILE_SL = 'slist.txt'
 CONTENT = 'text/plain'
 
@@ -141,4 +145,9 @@ CHOICES = (
     ('cup', 'cup'),  # стакан
     ('tablespoon', 'Tsp'),  # столовая ложка
     ('teaspoon', 'tsp'),  # чайная ложка
+)
+
+COLOR_PALETTE = (
+    ('#FFFFFF', 'white', ),
+    ('#000000', 'black', ),
 )
