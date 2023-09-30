@@ -41,3 +41,4 @@ social-auth-core==4.4.2
 sqlparse==0.4.4
 toml==0.10.2
 urllib3==1.26.15
+gunicorn==20.1.0 
