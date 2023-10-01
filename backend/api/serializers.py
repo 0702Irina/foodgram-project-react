@@ -13,9 +13,12 @@ from recipes.models import (
     User,
     Tag,
 )
-from backend_food.settings import (
-    ONE,
+from recipes.constants import (
+    REFOLLOW,
+    FOLLOW_YOURSELF,
+    MIN_AMOUNT,
     MAX_AMOUNT,
+    MIN_TIME,
     MAX_TIME
 )
 
@@ -128,6 +131,27 @@ class FollowSerializer(serializers.ModelSerializer):
         return obj.author.recipes.all().count()
 
 
+class FollowValidateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Follow
+        fields = ('user', 'author')
+        validators = (
+            serializers.UniqueTogetherValidator(
+                queryset=Follow.objects.all(),
+                fields=('user', 'author'),
+                message=REFOLLOW
+            ),
+        )
+
+    def validate(self, data):
+        if data['user'] == data['author']:
+            raise serializers.ValidationError(
+                FOLLOW_YOURSELF
+            )
+        return data
+
+
 class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -232,7 +256,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
     def validate_ingredients(self, ingredients):
         if not ingredients:
             raise serializers.ValidationError(
-                f'Recipe must have at least {ONE} ingredient'
+                'Recipe must have at least one ingredient'
             )
         ingredients_list = []
         for ingredient in ingredients:
@@ -240,17 +264,18 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     'You have already added this ingredient'
                 )
-            if not ONE <= int(ingredient['amount']) <= MAX_AMOUNT:
+            if not MIN_AMOUNT <= int(ingredient['amount']) <= MAX_AMOUNT:
                 raise serializers.ValidationError(
                     f'\n The amount of ingredient'
-                    f'must be from {ONE} to {MAX_AMOUNT}.'
+                    f'must be from {MIN_AMOUNT} to {MAX_AMOUNT}.'
                 )
             ingredients_list.append(ingredient)
         return ingredients
 
     def validate_cooking_time(self, data):
-        if not ONE <= data <= MAX_TIME:
+        if not MIN_TIME <= data <= MAX_TIME:
             raise serializers.ValidationError(
-                f'The cooking time should be from {ONE} to {MAX_TIME} minutes.'
+                f'\nThe cooking time'
+                f'should be from {MIN_TIME} to {MAX_TIME} minutes.'
             )
         return data

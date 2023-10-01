@@ -10,7 +10,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'unsafe-secret-key')
 
 
-DEBUG = os.getenv('DEBUG', default=False) == 'True'
+DEBUG = True
+# os.getenv('DEBUG', default=True) == 'True'
 
 
 ALLOWED_HOSTS = os.getenv('DJANGO_HOSTS', '127.0.0.1,localhost').split(',')
@@ -130,24 +131,3 @@ DJOSER = {
         'current_user': 'api.serializers.UserSerializer'
     }
 }
-
-REFOLLOW = 'Such a subscription already exists'
-FOLLOW_YOURSELF = 'You can not subscribe to yourself'
-ONE = 1
-MAX_AMOUNT = 30
-MAX_TIME = 600
-FILE_SL = 'slist.txt'
-CONTENT = 'text/plain'
-
-CHOICES = (
-    ('kilogram', 'kg'),  # кг
-    ('pieces', 'PCS'),  # шт
-    ('cup', 'cup'),  # стакан
-    ('tablespoon', 'Tsp'),  # столовая ложка
-    ('teaspoon', 'tsp'),  # чайная ложка
-)
-
-COLOR_PALETTE = (
-    ('#FFFFFF', 'white', ),
-    ('#000000', 'black', ),
-)

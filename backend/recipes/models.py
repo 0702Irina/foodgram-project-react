@@ -4,11 +4,12 @@ from django.db import models
 
 from colorfield.fields import ColorField
 
-from backend_food.settings import (
+from recipes.constants import (
     CHOICES,
     COLOR_PALETTE,
-    ONE,
+    MIN_AMOUNT,
     MAX_AMOUNT,
+    MIN_TIME,
     MAX_TIME
 )
 
@@ -127,12 +128,6 @@ class Follow(models. Model):
         ordering = ('-user', )
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
-        constraints = (
-            models.UniqueConstraint(
-                name='unique_follow',
-                fields=('user', 'author')
-            ),
-        )
 
     def __str__(self) -> str:
         return f'{self.user} follows {self.author}'
@@ -164,8 +159,10 @@ class Recipe(models.Model):
     )
     cooking_time = models.PositiveSmallIntegerField(
         null=True,
-        validators=[MinValueValidator(ONE),
-                    MaxValueValidator(MAX_TIME)],
+        validators=(
+            MinValueValidator(MIN_TIME),
+            MaxValueValidator(MAX_TIME)
+        ),
         verbose_name='Время приготовления блюда',
         help_text='Введите время приготовления блюда ',
     )
@@ -214,8 +211,10 @@ class RecipeIngredient(models.Model):
         help_text='Выберите ингредиент',
     )
     amount = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(ONE),
-                    MaxValueValidator(MAX_AMOUNT)],
+        validators=(
+            MinValueValidator(MIN_AMOUNT),
+            MaxValueValidator(MAX_AMOUNT)
+        ),
         verbose_name='Количество',
         help_text='Введите количество ингедиента',
     )

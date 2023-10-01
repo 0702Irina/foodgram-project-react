@@ -12,6 +12,7 @@ from djoser.views import UserViewSet
 from api.filters import IngredientFilter, RecipeFilter
 from api.permissions import IsAuthorOrReadOnly
 from api.serializers import (
+    FollowValidateSerializer,
     RecipeCreateSerializers,
     RecipeShortSerializer,
     UserCreateSerializer,
@@ -30,11 +31,9 @@ from recipes.models import (
     User,
     Tag,
 )
-from backend_food.settings import (
-    REFOLLOW,
-    FOLLOW_YOURSELF,
+from recipes.constants import (
     FILE_SL,
-    CONTENT
+    CONTENT,
 )
 
 
@@ -54,18 +53,16 @@ class CustomUserViewSet(UserViewSet):
     def subscribe(self, request, id=None):
         user = request.user
         author = get_object_or_404(User, id=id)
-        if user == author:
-            return Response({
-                'follow_error': FOLLOW_YOURSELF
-            }, status=status.HTTP_400_BAD_REQUEST)
-        if Follow.objects.filter(user=user, author=author).exists():
-            return Response({
-                'follow_error': REFOLLOW
-            }, status=status.HTTP_400_BAD_REQUEST)
+        data = {'user': request.user.id, 'author': id}
         follow = Follow.objects.create(user=user, author=author)
-        serializer = FollowSerializer(
-            follow, context={'request': request}
+        serializer = FollowValidateSerializer(
+            follow,
+            data=data,
+            context={'request': request}
         )
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @subscribe.mapping.delete
@@ -73,7 +70,7 @@ class CustomUserViewSet(UserViewSet):
         follow = Follow.objects.filter(
             user=request.user,
             author=get_object_or_404(User, id=id),
-        ).exists()
+        )
         follow.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -159,9 +156,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
             'ingredient__measurement_unit'
         ).annotate(amount=Sum('amount'))
         slist = self.create_txt_cart(ingredients)
-        file = FILE_SL
         response = HttpResponse(slist, content_type=CONTENT)
-        response['Content-Disposition'] = f"attachment; filename='{file}'"
+        response['Content-Disposition'] = f"attachment; filename='{FILE_SL}'"
         return response
 
 
