@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, status
+from rest_framework import serializers, viewsets, status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -71,6 +71,8 @@ class CustomUserViewSet(UserViewSet):
             user=request.user,
             author=get_object_or_404(User, id=id),
         )
+        if not follow.exists():
+            raise serializers.ValidationError('There is no such subscription')
         follow.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
