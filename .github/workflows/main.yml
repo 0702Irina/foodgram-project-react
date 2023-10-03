@@ -43,4 +43,4 @@ jobs:
         with:
           push: true
           context: ./backend
-          tags: katamayo/backend:latest
+          tags: 0702irisha/food_backend:latest
