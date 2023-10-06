@@ -5,7 +5,6 @@ from django.db import models
 from colorfield.fields import ColorField
 
 from recipes.constants import (
-    CHOICES,
     COLOR_PALETTE,
     MIN_AMOUNT,
     MAX_AMOUNT,
@@ -67,7 +66,6 @@ class Ingredient(models. Model):
     measurement_unit = models.CharField(
         'Единица измерения',
         max_length=200,
-        choices=CHOICES,
         help_text='Выберите единицу измерения',
     )
 
