@@ -12,7 +12,7 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
   backend:
-    image: 0702irisha/food_backend
+    image: 0702irisha/foodgram-project-react_backend
     env_file: .env
     volumes:
       - static:/static/
@@ -20,14 +20,14 @@ services:
     depends_on:
       - db
   frontend:
-    image: 0702irisha/food_front
+    image: 0702irisha/foodgram-project-react_frontend
     command: cp -r /app/build/. /static/
     volumes:
       - static:/static
   gateway:
-    image: 0702irisha/nginx
+    image: 0702irisha/foodgram-project-react_nginx
     ports:
-      - 8080:80
+      - 9090:80
     volumes:
       - static:/static
       - media:/app/media/
