@@ -5,38 +5,38 @@ services:
     volumes:
       - /var/lib/postgresql/data/
     env_file:
-      - ./.env
+      - .env
 
   backend:
 
     container_name: app
     build:
-      context: ../backend
-      dockerfile: ../backend/Dockerfile
+      context: ./backend
+      dockerfile: ./backend/Dockerfile
     volumes:
-      - ../static/:/app/static/
-      - ../media/:/app/media/recipes/
+      - ./static/:/app/static/
+      - ./media/:/app/media/recipes/
     depends_on:
       - db
     env_file:
-      - ./.env
+      - .env
     restart: always
 
   frontend:
 
     container_name: front
     build:
-      context: ../frontend
+      context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - ../frontend/:/app/result_build/
+      - ./frontend/:/app/result_build/
     depends_on:
       - db
 
   nginx:
 
     build:
-      context: ../nginx
+      context: ./nginx
       dockerfile: Dockerfile
     ports:
       - "8080:80"
