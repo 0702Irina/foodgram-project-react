@@ -9,16 +9,16 @@ from api.views import (
 )
 
 
-router_v1 = routers.DefaultRouter()
+router = routers.DefaultRouter()
 
 
-router_v1.register(r'tags', TagViewSet, basename='tags'),
-router_v1.register(r'ingredients', IngredientViewSet, basename='ingredients'),
-router_v1.register(r'users', CustomUserViewSet, basename='users'),
-router_v1.register(r'recipes', RecipeViewSet, basename='recipes'),
+router.register(r'tags', TagViewSet, basename='tags'),
+router.register(r'ingredients', IngredientViewSet, basename='ingredients'),
+router.register(r'users', CustomUserViewSet, basename='users'),
+router.register(r'recipes', RecipeViewSet, basename='recipes'),
 
 urlpatterns = [
-    path('v1/', include(router_v1.urls)),
-    path('v1/auth/', include('djoser.urls')),
-    path('v1/auth/', include('djoser.urls.authtoken')),
+    path('/', include(router.urls)),
+    path('/auth/', include('djoser.urls')),
+    path('/auth/', include('djoser.urls.authtoken')),
 ]
