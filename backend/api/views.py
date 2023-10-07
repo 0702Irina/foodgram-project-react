@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import serializers, viewsets, status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
@@ -15,7 +15,6 @@ from api.serializers import (
     FollowValidateSerializer,
     RecipeCreateSerializers,
     RecipeShortSerializer,
-    UserCreateSerializer,
     IngredientSerializer,
     FollowSerializer,
     RecipeSerializer,
@@ -39,11 +38,8 @@ from recipes.constants import (
 
 class CustomUserViewSet(UserViewSet):
     queryset = User.objects.all()
-
-    def get_serializer_class(self):
-        if self.action == 'create':
-            return UserCreateSerializer
-        return UserSerializer
+    serializer_class = UserSerializer
+    permission_classes = AllowAny
 
     @action(
         detail=True,

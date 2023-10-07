@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'unsafe-secret-key')
 
 
-DEBUG = os.getenv('DEBUG', default=True) == 'True'
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 
 ALLOWED_HOSTS = os.getenv('DJANGO_HOSTS', '127.0.0.1,localhost').split(',')
@@ -101,10 +101,11 @@ USE_L10N = True
 USE_TZ = True
 
 
-STATIC_URL = 'static_backend/'
-STATIC_ROOT = BASE_DIR / 'static_backend'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'collected_static'
+
 MEDIA_URL = '/media/'
+MEDIA_ROOT = '/media'
 
 DEFAULT_CHARSET = 'utf-8'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
