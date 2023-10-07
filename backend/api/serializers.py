@@ -23,18 +23,6 @@ from recipes.constants import (
 )
 
 
-class UserCreateSerializer(UserSerializer):
-    class Meta:
-        model = User
-        fields = (
-            'email',
-            'username',
-            'first_name',
-            'last_name',
-            'password',
-        )
-
-
 class UserSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField(
         method_name='get_is_subscribed'
