@@ -15,21 +15,21 @@ services:
     image: 0702irisha/foodgram-project-react_backend
     env_file: .env
     volumes:
-      - static:/static/
+      - static:/static_backend/
       - media:/media/
     depends_on:
       - db
   frontend:
     image: 0702irisha/foodgram-project-react_frontend
-    command: cp -r /app/build/. /static/
+    command: cp -r /app/build/. /static_backend/
     volumes:
-      - static:/static
+      - static:/static_backend
   gateway:
     image: 0702irisha/foodgram-project-react_nginx
     ports:
       - 9090:80
     volumes:
-      - static:/static
+      - static:/static_backend
       - media:/media/
     depends_on:
       - backend
