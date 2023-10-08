@@ -103,12 +103,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeCreateSerializers
         return RecipeSerializer
 
-    def delete_from(self, model, user, pk):
-        obj = model.objects.filter(user=user, recipe__id=pk)
-        if obj.exists():
-            obj.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
     def action_for_recipes(self, model, user, pk):
         if self.request.method == 'POST':
             recipe = get_object_or_404(Recipe, id=pk)
