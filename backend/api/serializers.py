@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import transaction
 from rest_framework import serializers
 
@@ -10,7 +11,6 @@ from recipes.models import (
     Ingredient,
     Follow,
     Recipe,
-    User,
     Tag,
 )
 from recipes.constants import (
@@ -23,18 +23,21 @@ from recipes.constants import (
 )
 
 
-class UserAddSerializer(UserCreateSerializer):
+User = get_user_model()
 
-    class Meta(UserCreateSerializer.Meta):
+
+class UserCreateSerializer(UserCreateSerializer):
+    class Meta:
         model = User
         fields = (
-            'email',
             'id',
+            'email',
             'username',
             'first_name',
             'last_name',
             'password',
         )
+        read_only_fields = ('id',)
 
 
 class UserSerializer(UserSerializer):

@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.db.models import Sum
@@ -18,7 +19,6 @@ from api.serializers import (
     IngredientSerializer,
     FollowSerializer,
     RecipeSerializer,
-    UserAddSerializer,
     UserSerializer,
     TagSerializer,
 )
@@ -28,7 +28,6 @@ from recipes.models import (
     Ingredient,
     Follow,
     Recipe,
-    User,
     Tag,
 )
 from recipes.constants import (
@@ -37,15 +36,7 @@ from recipes.constants import (
 )
 
 
-class UserAddViewSet(viewsets.GenericViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserAddSerializer
-    permission_classes = (AllowAny, )
-
-    def create(self, reguest):
-        serializers = UserAddSerializer(data=reguest.data)
-        serializers.is_valid(raise_exception=True)
-        return Response(serializers.data, status=status.HTTP_200_OK)
+User = get_user_model()
 
 
 class CustomUserViewSet(UserViewSet):
