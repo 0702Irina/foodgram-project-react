@@ -1,7 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from djoser.serializers import UserSerializer
+from djoser.serializers import UserSerializer, UserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
 
 from recipes.models import (
@@ -21,6 +21,20 @@ from recipes.constants import (
     MIN_TIME,
     MAX_TIME
 )
+
+
+class UserAddSerializer(UserCreateSerializer):
+
+    class Meta(UserCreateSerializer.Meta):
+        model = User
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'password',
+        )
 
 
 class UserSerializer(UserSerializer):

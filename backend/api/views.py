@@ -18,6 +18,7 @@ from api.serializers import (
     IngredientSerializer,
     FollowSerializer,
     RecipeSerializer,
+    UserAddSerializer,
     UserSerializer,
     TagSerializer,
 )
@@ -34,6 +35,17 @@ from recipes.constants import (
     FILE_SL,
     CONTENT,
 )
+
+
+class UserAddViewSet(viewsets.GenericViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserAddSerializer
+    permission_classes = (AllowAny, )
+
+    def create(self, reguest):
+        serializers = UserAddSerializer(data=reguest.data)
+        serializers.is_valid(raise_exception=True)
+        return Response(serializers.data, status=status.HTTP_200_OK)
 
 
 class CustomUserViewSet(UserViewSet):
