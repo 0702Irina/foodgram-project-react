@@ -181,7 +181,7 @@ class Recipe(models.Model):
         help_text='Укажите дату публикации',
     )
     image = models.ImageField(
-        upload_to='recipe_img',
+        upload_to='recipe_img/',
         verbose_name='Фото блюда',
         help_text='Добавьте фото готового блюда',
     )
