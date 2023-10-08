@@ -181,8 +181,7 @@ class Recipe(models.Model):
         help_text='Укажите дату публикации',
     )
     image = models.ImageField(
-        upload_to='recipe/%Y/%m/%d/',
-        null=True,
+        upload_to='recipe_img',
         verbose_name='Фото блюда',
         help_text='Добавьте фото готового блюда',
     )
@@ -223,16 +222,16 @@ class RecipeIngredient(models.Model):
         verbose_name_plural = 'Ингредиенты'
 
 
-class ActionsForRecipe(models. Model):
+class Favorite(models. Model):
     user = models.ForeignKey(
         User,
-        related_name='actions',
+        related_name='favorites',
         verbose_name='Пользователь',
         on_delete=models.CASCADE,
     )
     recipe = models.ForeignKey(
         Recipe,
-        related_name='actions',
+        related_name='favorites',
         verbose_name='Рецепт',
         on_delete=models.CASCADE,
         null=True,
@@ -243,7 +242,20 @@ class ActionsForRecipe(models. Model):
         verbose_name_plural = 'Избранные'
 
 
-class Shopping_list(ActionsForRecipe):
+class Shopping_list(models. Model):
+    user = models.ForeignKey(
+        User,
+        related_name='sllists',
+        verbose_name='Пользователь',
+        on_delete=models.CASCADE,
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        related_name='sllists',
+        verbose_name='Рецепт',
+        on_delete=models.CASCADE,
+        null=True,
+    )
 
     class Meta:
         verbose_name = 'Список покупок'

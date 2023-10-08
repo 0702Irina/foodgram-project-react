@@ -23,9 +23,10 @@ from api.serializers import (
     TagSerializer,
 )
 from recipes.models import (
-    ActionsForRecipe,
     RecipeIngredient,
+    Shopping_list,
     Ingredient,
+    Favorite,
     Follow,
     Recipe,
     Tag,
@@ -131,7 +132,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 'errors': 'Recipe removed from favorites'
             }
             return Response(context, status=status.HTTP_204_NO_CONTENT)
-        return self.action_for_recipes(ActionsForRecipe, request.user, pk)
+        return self.action_for_recipes(Favorite, request.user, pk)
 
     @action(detail=True, methods=('post', 'delete'),
             permission_classes=(IsAuthenticatedOrReadOnly, ))
@@ -141,12 +142,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 'errors': 'Recipe removed from shopping list'
             }
             return Response(context, status=status.HTTP_204_NO_CONTENT)
-        return self.action_for_recipes(ActionsForRecipe, request.user, pk)
+        return self.action_for_recipes(Shopping_list, request.user, pk)
 
     @action(detail=False, methods=('GET', ))
     def download_shopping_cart(self, request):
         ingredients = RecipeIngredient.objects.filter(
-            recipe__actions__user=request.user
+            recipe__slists__user=request.user
         ).order_by('ingredient__name').values(
             'ingredient__name',
             'ingredient__measurement_unit'

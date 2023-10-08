@@ -6,9 +6,10 @@ from djoser.serializers import UserSerializer, UserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
 
 from recipes.models import (
-    ActionsForRecipe,
+    Shopping_list,
     RecipeIngredient,
     Ingredient,
+    Favorite,
     Follow,
     Recipe,
     Tag,
@@ -69,9 +70,9 @@ class IngredientSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ActionsSerializer(serializers.ModelSerializer):
+class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ActionsForRecipe
+        model = Favorite
         fields = '__all__'
 
 
@@ -199,7 +200,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
-        return ActionsForRecipe.objects.filter(
+        return Favorite.objects.filter(
             user=request.user, recipe_id=obj
         ).exists()
 
@@ -207,7 +208,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
-        return ActionsForRecipe.objects.filter(
+        return Shopping_list.objects.filter(
             user=request.user, recipe_id=obj
         ).exists()
 
