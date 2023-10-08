@@ -17,10 +17,18 @@ class RecipeFilter(FilterSet):
         to_field_name='slug',
         queryset=Tag.objects.all()
     )
+    is_farorited = filters.NumberFilter(
+        method='filter_is_favorited'
+    )
+    is_in_shopping_cart = filters.NumberFilter(
+        method='filter_shoppingcart'
+    )
 
     class Meta:
         model = Recipe
         fields = (
+            'is_farorited',
+            'is_in_shopping_cart',
             'author',
             'tags'
         )
