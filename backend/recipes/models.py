@@ -186,20 +186,6 @@ class Recipe(models.Model):
         verbose_name='Фото блюда',
         help_text='Добавьте фото готового блюда',
     )
-    favorited_by = models.ManyToManyField(
-        User,
-        verbose_name='Добавлен в избранное',
-        related_name='favorited',
-        db_table='recipes_favorited',
-        blank=True,
-    )
-    in_shopping_cart = models.ManyToManyField(
-        User,
-        verbose_name='Добавлен в корзину',
-        related_name='shopping_cart',
-        db_table='recipes_shopping_cart',
-        blank=True,
-    )
     is_published = models.BooleanField(default=True)
 
     class Meta:
