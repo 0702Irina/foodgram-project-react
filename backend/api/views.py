@@ -92,15 +92,10 @@ class CustomUserViewSet(UserViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
+    queryset = Recipe.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     permission_classes = (IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly)
-
-    def get_queryset(self):
-        recipes = Recipe.objects.prefetch_related(
-            'recipengredient_set', 'tags'
-        ).all()
-        return recipes
 
     def get_serializer_class(self):
         if self.action == 'create':
