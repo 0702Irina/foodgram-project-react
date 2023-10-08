@@ -39,7 +39,7 @@ from recipes.constants import (
 class CustomUserViewSet(UserViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = AllowAny
+    permission_classes = (AllowAny, )
 
     @action(
         detail=True,
