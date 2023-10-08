@@ -41,4 +41,4 @@ class RecipeFilter(FilterSet):
     def filter_shoppingcart(self, queryset, name, value):
         if value and self.request.user.is_authenticated:
             return queryset.filter(shoppingcart__user=self.request.user)
-        return
+        return queryset
