@@ -4,7 +4,6 @@ from django.db import models
 
 from colorfield.fields import ColorField
 
-from backend_food.settings import AUTH_USER_MODEL
 from recipes.constants import (
     COLOR_PALETTE,
     MIN_AMOUNT,
@@ -109,14 +108,14 @@ class Tag(models. Model):
 
 class Follow(models. Model):
     user = models.ForeignKey(
-        AUTH_USER_MODEL,
+        User,
         related_name='followers',
         on_delete=models.CASCADE,
         verbose_name='Подписчик',
         help_text='Укажите подписчика',
     )
     author = models.ForeignKey(
-        AUTH_USER_MODEL,
+        User,
         related_name='followings',
         on_delete=models.CASCADE,
         verbose_name='Автор рецепта',
@@ -166,7 +165,7 @@ class Recipe(models.Model):
         help_text='Введите время приготовления блюда ',
     )
     author = models.ForeignKey(
-        AUTH_USER_MODEL,
+        User,
         related_name='recipes',
         on_delete=models.CASCADE,
         null=True,
@@ -225,7 +224,7 @@ class RecipeIngredient(models.Model):
 
 class ActionsForRecipe(models. Model):
     user = models.ForeignKey(
-        AUTH_USER_MODEL,
+        User,
         related_name='actions',
         verbose_name='Пользователь',
         on_delete=models.CASCADE,
