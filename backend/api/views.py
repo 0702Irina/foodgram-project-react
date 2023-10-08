@@ -24,9 +24,9 @@ from api.serializers import (
 )
 from recipes.models import (
     RecipeIngredient,
-    # Shopping_list,
+    Shopping_list,
     Ingredient,
-    # Favorite,
+    Favorite,
     Follow,
     Recipe,
     Tag,
@@ -124,25 +124,25 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
         return slist
 
-    # @action(detail=True, methods=('post', 'delete'),
-    #         permission_classes=(IsAuthenticatedOrReadOnly,))
-    # def favorite(self, request, pk=None):
-    #     if self.request.method == 'DELETE':
-    #         context = {
-    #             'errors': 'Recipe removed from favorites'
-    #         }
-    #         return Response(context, status=status.HTTP_204_NO_CONTENT)
-    #     return self.action_for_recipes(Favorite, request.user, pk)
+    @action(detail=True, methods=('post', 'delete'),
+            permission_classes=(IsAuthenticatedOrReadOnly,))
+    def favorite(self, request, pk=None):
+        if self.request.method == 'DELETE':
+            context = {
+                'errors': 'Recipe removed from favorites'
+            }
+            return Response(context, status=status.HTTP_204_NO_CONTENT)
+        return self.action_for_recipes(Favorite, request.user, pk)
 
-    # @action(detail=True, methods=('post', 'delete'),
-    #         permission_classes=(IsAuthenticatedOrReadOnly, ))
-    # def shopping_cart(self, request, pk=None):
-    #     if self.request.method == 'DELETE':
-    #         context = {
-    #             'errors': 'Recipe removed from shopping list'
-    #         }
-    #         return Response(context, status=status.HTTP_204_NO_CONTENT)
-    #     return self.action_for_recipes(Shopping_list, request.user, pk)
+    @action(detail=True, methods=('post', 'delete'),
+            permission_classes=(IsAuthenticatedOrReadOnly, ))
+    def shopping_cart(self, request, pk=None):
+        if self.request.method == 'DELETE':
+            context = {
+                'errors': 'Recipe removed from shopping list'
+            }
+            return Response(context, status=status.HTTP_204_NO_CONTENT)
+        return self.action_for_recipes(Shopping_list, request.user, pk)
 
     @action(detail=False, methods=('GET', ))
     def download_shopping_cart(self, request):
