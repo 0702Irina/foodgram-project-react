@@ -26,7 +26,7 @@ from recipes.models import (
     RecipeIngredient,
     Shopping_list,
     Ingredient,
-    Favorite,
+    # Favorite,
     Follow,
     Recipe,
     Tag,
@@ -124,15 +124,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
         return slist
 
-    @action(detail=True, methods=('post', 'delete'),
-            permission_classes=(IsAuthenticatedOrReadOnly,))
-    def favorite(self, request, pk=None):
-        if self.request.method == 'DELETE':
-            context = {
-                'errors': 'Recipe removed from favorites'
-            }
-            return Response(context, status=status.HTTP_204_NO_CONTENT)
-        return self.action_for_recipes(Favorite, request.user, pk)
+    # @action(detail=True, methods=('post', 'delete'),
+    #         permission_classes=(IsAuthenticatedOrReadOnly,))
+    # def favorite(self, request, pk=None):
+    #     if self.request.method == 'DELETE':
+    #         context = {
+    #             'errors': 'Recipe removed from favorites'
+    #         }
+    #         return Response(context, status=status.HTTP_204_NO_CONTENT)
+    #     return self.action_for_recipes(Favorite, request.user, pk)
 
     @action(detail=True, methods=('post', 'delete'),
             permission_classes=(IsAuthenticatedOrReadOnly, ))
