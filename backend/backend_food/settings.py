@@ -129,9 +129,9 @@ DJOSER = {
         'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
     },
     'SERIALIZERS': {
-        'user': 'api_users.serializers.UserSerializer',
-        'current_user': 'api_users.serializers.UserSerializer',
-        'user_create': 'api_users.serializers.UserCreateSerializer',
+        'user': 'api.serializers.UserSerializer',
+        'current_user': 'api.serializers.UserSerializer',
+        'user_create': 'api.serializers.UserCreateSerializer',
     },
     'LOGIN_FIELD': 'email',
     'HIDE_USERS': False,
