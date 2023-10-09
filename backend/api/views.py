@@ -103,17 +103,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeCreateSerializers
         return RecipeSerializer
 
-    def action_for_recipes(self, model, user, pk):
-        if self.request.method == 'POST':
-            recipe = get_object_or_404(Recipe, id=pk)
-            model.objects.create(user=user, recipe=recipe)
-            serializer = RecipeShortSerializer(recipe)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        if self.request.method == 'DELETE':
-            model.objects.filter(user=user, recipe__id=pk).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
     def create_txt_cart(self, ingredients):
         slist = 'Shopping list'
         for ingredient in ingredients:
@@ -124,25 +113,38 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
         return slist
 
-    @action(detail=True, methods=('post', 'delete'),
-            permission_classes=(IsAuthenticatedOrReadOnly,))
-    def favorite(self, request, pk=None):
-        if self.request.method == 'DELETE':
-            context = {
-                'errors': 'Recipe removed from favorites'
-            }
-            return Response(context, status=status.HTTP_204_NO_CONTENT)
-        return self.action_for_recipes(Favorite, request.user, pk)
+    def add_to(self, model, user, pk):
+        if model.objects.filter(user=user, recipe__id=pk).exists():
+            return Response(
+                {'Error': 'The recipe has already been added'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        recipe = get_object_or_404(Recipe, id=pk)
+        model.objects.create(user=user, recipe=recipe)
+        serializer = RecipeShortSerializer(recipe)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(detail=True, methods=('post', 'delete'),
-            permission_classes=(IsAuthenticatedOrReadOnly, ))
-    def shopping_cart(self, request, pk=None):
-        if self.request.method == 'DELETE':
-            context = {
-                'errors': 'Recipe removed from shopping list'
-            }
-            return Response(context, status=status.HTTP_204_NO_CONTENT)
-        return self.action_for_recipes(Shopping_list, request.user, pk)
+    def delete_from(self, model, user, pk):
+        obj = model.objects.filter(user=user, recipe__id=pk)
+        if obj.exists():
+            obj.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {'errors': 'Recipe removed'},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    @action(detail=True, methods=['post', 'delete'])
+    def favorite(self, request, pk):
+        if request.method == 'POST':
+            return self.add_to(Favorite, request.user, pk)
+        return self.delete_from(Favorite, request.user, pk)
+
+    @action(detail=True, methods=['post', 'delete'])
+    def shopping_cart(self, request, pk):
+        if request.method == 'POST':
+            return self.add_to(Shopping_list, request.user, pk)
+        return self.delete_from(Shopping_list, request.user, pk)
 
     @action(detail=False, methods=('GET', ))
     def download_shopping_cart(self, request):
