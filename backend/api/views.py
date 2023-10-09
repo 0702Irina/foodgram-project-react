@@ -125,14 +125,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
         )
 
     def create_txt_cart(self, ingredients):
-        slist = 'Shopping list'
+        shopping_cart = 'Shopping list'
         for ingredient in ingredients:
-            slist += (
+            shopping_cart += (
                 f"\n{ingredient['ingredient__name']} "
                 f"({ingredient['ingredient__measurement_unit']}) - "
                 f"{ingredient['amount']}"
             )
-        return slist
+        return shopping_cart
 
     @action(detail=True, methods=['post', 'delete'])
     def favorite(self, request, pk):
@@ -149,13 +149,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=('GET', ))
     def download_shopping_cart(self, request):
         ingredients = RecipeIngredient.objects.filter(
-            recipe__slists__user=request.user
+            recipe__shopping_cart__user=request.user
         ).order_by('ingredient__name').values(
             'ingredient__name',
             'ingredient__measurement_unit'
         ).annotate(amount=Sum('amount'))
-        slist = self.create_txt_cart(ingredients)
-        response = HttpResponse(slist, content_type=CONTENT)
+        shopping_cart = self.create_txt_cart(ingredients)
+        response = HttpResponse(shopping_cart, content_type=CONTENT)
         response['Content-Disposition'] = f"attachment; filename='{FILE_SL}'"
         return response
 
