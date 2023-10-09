@@ -103,16 +103,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeCreateSerializers
         return RecipeSerializer
 
-    def create_txt_cart(self, ingredients):
-        slist = 'Shopping list'
-        for ingredient in ingredients:
-            slist += (
-                f"\n{ingredient['ingredient__name']} "
-                f"({ingredient['ingredient__measurement_unit']}) - "
-                f"{ingredient['amount']}"
-            )
-        return slist
-
     def add_to(self, model, user, pk):
         if model.objects.filter(user=user, recipe__id=pk).exists():
             return Response(
@@ -133,6 +123,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
             {'errors': 'Recipe removed'},
             status=status.HTTP_400_BAD_REQUEST,
         )
+
+    def create_txt_cart(self, ingredients):
+        slist = 'Shopping list'
+        for ingredient in ingredients:
+            slist += (
+                f"\n{ingredient['ingredient__name']} "
+                f"({ingredient['ingredient__measurement_unit']}) - "
+                f"{ingredient['amount']}"
+            )
+        return slist
 
     @action(detail=True, methods=['post', 'delete'])
     def favorite(self, request, pk):
