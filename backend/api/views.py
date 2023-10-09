@@ -103,59 +103,49 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeCreateSerializers
         return RecipeSerializer
 
-    def add_to(self, model, user, pk):
-        if model.objects.filter(user=user, recipe__id=pk).exists():
-            return Response(
-                {'Error': 'The recipe has already been added'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        recipe = get_object_or_404(Recipe, id=pk)
-        model.objects.create(user=user, recipe=recipe)
-        serializer = RecipeShortSerializer(recipe)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    def delete_from(self, model, user, pk):
-        obj = model.objects.filter(user=user, recipe__id=pk)
-        if obj.exists():
-            obj.delete()
+    def action_for_recipes(self, model, user, pk):
+        if self.request.method == 'POST':
+            recipe = get_object_or_404(Recipe, id=pk)
+            model.objects.create(user=user, recipe=recipe)
+            serializer = RecipeShortSerializer(recipe)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if self.request.method == 'DELETE':
+            model.objects.filter(user=user, recipe__id=pk)
+            if not model.exists():
+                raise serializers.ValidationError('There is not such object')
+            model.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(
-            {'errors': 'Recipe removed'},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
 
     def create_txt_cart(self, ingredients):
-        shopping_cart = 'Shopping list'
+        slist = 'Shopping list'
         for ingredient in ingredients:
-            shopping_cart += (
+            slist += (
                 f"\n{ingredient['ingredient__name']} "
                 f"({ingredient['ingredient__measurement_unit']}) - "
                 f"{ingredient['amount']}"
             )
-        return shopping_cart
+        return slist
 
-    @action(detail=True, methods=['post', 'delete'])
-    def favorite(self, request, pk):
-        if request.method == 'POST':
-            return self.add_to(Favorite, request.user, pk)
-        return self.delete_from(Favorite, request.user, pk)
+    @action(detail=True, methods=('post', 'delete'),
+            permission_classes=(IsAuthenticatedOrReadOnly,))
+    def favorite(self, request, pk=None):
+        return self.action_for_recipes(Favorite, request.user, pk)
 
-    @action(detail=True, methods=['post', 'delete'])
-    def shopping_cart(self, request, pk):
-        if request.method == 'POST':
-            return self.add_to(Shopping_list, request.user, pk)
-        return self.delete_from(Shopping_list, request.user, pk)
+    @action(detail=True, methods=('post', 'delete'),
+            permission_classes=(IsAuthenticatedOrReadOnly, ))
+    def shopping_cart(self, request, pk=None):
+        return self.action_for_recipes(Shopping_list, request.user, pk)
 
     @action(detail=False, methods=('GET', ))
     def download_shopping_cart(self, request):
         ingredients = RecipeIngredient.objects.filter(
-            recipe__shopping_cart__user=request.user
+            recipe__actions__user=request.user
         ).order_by('ingredient__name').values(
             'ingredient__name',
             'ingredient__measurement_unit'
         ).annotate(amount=Sum('amount'))
-        shopping_cart = self.create_txt_cart(ingredients)
-        response = HttpResponse(shopping_cart, content_type=CONTENT)
+        slist = self.create_txt_cart(ingredients)
+        response = HttpResponse(slist, content_type=CONTENT)
         response['Content-Disposition'] = f"attachment; filename='{FILE_SL}'"
         return response
 
