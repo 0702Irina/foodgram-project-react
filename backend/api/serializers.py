@@ -235,7 +235,12 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
             'cooking_time',
             'text',
             'tags',
+<<<<<<< HEAD
             'ingredients'
+=======
+            'ingredients',
+            'image'
+>>>>>>> 10ea7d5741aa055fac4605c5527c0ad7aea4a58e
         )
 
     def create_ingredients(self, recipe, ingredients):
