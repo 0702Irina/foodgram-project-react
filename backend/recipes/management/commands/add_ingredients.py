@@ -12,7 +12,7 @@ class Command(BaseCommand):
             nargs='?',
             type=str,
             help='Path to the .csv file',
-            default='foodgram_static/ingredients.csv',
+            default='data/ingredients.csv',
         )
         parser.add_argument(
             'model',
