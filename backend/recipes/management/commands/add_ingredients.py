@@ -4,7 +4,7 @@ from recipes.models import Ingredient
 
 MODEL = Ingredient
 
-csv_file_paths = 'app/data/ingredients.cvs'
+csv_file_paths = '/app/data/ingredients.cvs'
 
 with open(csv_file_paths, encoding='utf-8', mode='r') as file:
     csv_reader = csv.DictReader(file)
