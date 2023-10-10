@@ -226,10 +226,17 @@ class IngredientinRecipeCreate(serializers.ModelSerializer):
 
 class RecipeCreateSerializers(serializers.ModelSerializer):
     ingredients = IngredientinRecipeCreate(many=True)
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
-        fields = ('name', 'cooking_time', 'text', 'tags', 'ingredients')
+        fields = (
+            'name',
+            'cooking_time',
+            'text',
+            'tags',
+            'ingredients'
+        )
 
     def create_ingredients(self, recipe, ingredients):
         ingredient_objects = (
