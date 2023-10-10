@@ -31,5 +31,5 @@ class RecipeFilter(FilterSet):
     def is_in_shopping_cart_filter(self, queryset, name, value):
         user = self.request.user.pk
         if value:
-            return queryset.filter(sllist__user=user)
+            return queryset.filter(sllists__user=user)
         return queryset
