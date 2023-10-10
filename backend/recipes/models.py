@@ -251,7 +251,7 @@ class Shopping_list(models. Model):
     )
     recipe = models.ForeignKey(
         Recipe,
-        related_name='sllist',
+        related_name='sllists',
         verbose_name='Рецепт',
         on_delete=models.CASCADE,
         null=True,
