@@ -1,6 +1,5 @@
 import csv
 
-from django.conf import settings
 from django.core.management import BaseCommand, CommandError
 
 from recipes.models import Ingredient
@@ -11,9 +10,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         try:
-            data_path = settings.BASE_DIR
             with open(
-                f'{data_path}/app/data/ingredients.csv', 'r', encoding='utf-8'
+                'data/ingredients.csv', 'r', encoding='utf-8'
             ) as csv_file:
                 reader = csv.DictReader(csv_file)
                 Ingredient.objects.bulk_create(
