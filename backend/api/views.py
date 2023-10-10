@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import serializers, viewsets, status
+from rest_framework import serializers, viewsets, status, pagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -97,9 +97,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     permission_classes = (IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly)
-
-    def perform_update(self, serializer):
-        serializer.save(author=self.request.user)
+    pagination_class = pagination.LimitOffsetPagination
 
     def get_serializer_class(self):
         if self.action == 'create':

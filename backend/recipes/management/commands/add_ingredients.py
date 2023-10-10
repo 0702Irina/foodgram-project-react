@@ -1,6 +1,6 @@
 import csv
 
-from django.core.management import BaseCommand, CommandError
+from django.core.management import BaseCommand
 
 from recipes.models import Ingredient
 
@@ -18,4 +18,3 @@ class Command(BaseCommand):
             )
         self.stdout.write(self.style.SUCCESS('Ингредиенты загружены'))
         return 'OK'
-       
