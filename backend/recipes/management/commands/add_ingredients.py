@@ -11,7 +11,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         try:
             with open(
-                'data/ingredients.csv', 'r', encoding='utf-8'
+                './data/ingredients.csv', 'r', encoding='utf-8'
             ) as csv_file:
                 reader = csv.DictReader(csv_file)
                 Ingredient.objects.bulk_create(
