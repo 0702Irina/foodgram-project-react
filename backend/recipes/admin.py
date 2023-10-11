@@ -37,7 +37,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'pub_date',
         'author'
     )
-    search_fields = ('author__username', 'author__email', 'recipe__name')
+    search_fields = ('author__username', 'author__email', 'name')
     list_filter = ('tags',)
     empty_value_display = '-пусто-'
     verbose_name = 'Рецепты',
