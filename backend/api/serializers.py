@@ -243,6 +243,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = (
+            'id',
             'name',
             'cooking_time',
             'text',
@@ -285,6 +286,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
             ingredient_id = ingredient_data['id']
             amount = ingredient_data['amount']
             self.create_ingredients(instance, ingredient_id, amount)
+
         instance.save()
         return instance
 
