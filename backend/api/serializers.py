@@ -277,16 +277,14 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
+        instance.tags.clear()
+        instance.tags.set(validated_data.pop('tags'))
         RecipeIngredient.objects.filter(recipe=instance).delete()
-
         ingredients_data = validated_data.pop('ingredients')
         for ingredient_data in ingredients_data:
             ingredient_id = ingredient_data['id']
             amount = ingredient_data['amount']
             self.create_ingredients(instance, ingredient_id, amount)
-        tags = validated_data.get('tags')
-        if tags is not None:
-            instance.tags.set(tags)
         instance.save()
         return instance
 
