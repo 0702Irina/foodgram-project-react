@@ -221,6 +221,12 @@ class RecipeIngredient(models.Model):
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('recipe', 'ingredient'),
+                name='unique_ingredient'
+            ),
+        )
 
 
 class Favorite(models. Model):
