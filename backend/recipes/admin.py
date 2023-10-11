@@ -90,6 +90,11 @@ class FavoritesAdmin(admin.ModelAdmin):
     )
     verbose_name = 'Избранное'
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'tag':
+            kwargs['queryset'] = Recipe.objects.filter(tag=request.tag)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
