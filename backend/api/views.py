@@ -107,16 +107,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeSerializer
         return RecipeCreateSerializers
 
-    def adding_recipe(add_serializer, model, request, recipe_id):
-        user = request.user
-        data = {'user': user.id, 'recipe': recipe_id}
-        serializer = add_serializer(data=data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED
-        )
-
     def add_to(self, model, user, pk):
         if model.objects.filter(user=user, recipe__id=pk).exists():
             return Response(
