@@ -72,8 +72,8 @@ class Ingredient(models. Model):
     )
 
     class Meta:
-        verbose_name = 'Ингридиент'
-        verbose_name_plural = 'Ингридиенты'
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
         constraints = (
             models.UniqueConstraint(
                 fields=['name', 'measurement_unit'], name='unique_ingredients'
@@ -157,10 +157,9 @@ class Recipe(models.Model):
     )
     ingredients = models.ManyToManyField(
         Ingredient,
-        related_name='recipes',
         through='RecipeIngredient',
         through_fields=('recipe', 'ingredient'),
-        verbose_name='Название ингридиента',
+        verbose_name='Ингредиенты',
         help_text='Выберите ингридиент',
     )
     cooking_time = models.PositiveSmallIntegerField(
