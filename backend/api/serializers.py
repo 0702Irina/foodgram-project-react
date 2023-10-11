@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from rest_framework import serializers
 from django.core.files.base import ContentFile
-from django.core.exceptions import ValidationError
+from django.forms import ValidationError
 
 from djoser.serializers import UserSerializer, UserCreateSerializer
 
