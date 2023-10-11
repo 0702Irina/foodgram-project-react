@@ -279,7 +279,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
         RecipeIngredient.objects.bulk_create(ingredient_objects)
 
     @transaction.atomic
-    def create(self, recipe, validated_data):
+    def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
         author = self.context.get('request').user
