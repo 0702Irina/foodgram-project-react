@@ -88,8 +88,9 @@ class FavoritesAdmin(admin.ModelAdmin):
         'user',
         'recipe'
     )
+    search_fields = ('user__username', 'user__email', 'recipe__name')
     verbose_name = 'Избранное'
-    list_filter = ["recipe__tags"]
+    list_filter = ('recipe__tags',)
 
 
 @admin.register(User)
