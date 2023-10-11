@@ -4,7 +4,11 @@ from django.http import HttpResponse
 from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import serializers, viewsets, status, pagination
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.permissions import (
+    IsAuthenticatedOrReadOnly,
+    SAFE_METHODS,
+    AllowAny
+)
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
@@ -100,9 +104,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     pagination_class = pagination.PageNumberPagination
 
     def get_serializer_class(self):
-        if self.action == 'create':
-            return RecipeCreateSerializers
-        return RecipeSerializer
+        if self.request.method in SAFE_METHODS:
+            return RecipeSerializer
+        return RecipeCreateSerializers
 
     def add_to(self, model, user, pk):
         if model.objects.filter(user=user, recipe__id=pk).exists():
