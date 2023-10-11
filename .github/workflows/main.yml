@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9"]
+        python-version: ['3.9']
     services:
       postgres:
         image: postgres:13.10
@@ -85,9 +85,9 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        source: "infra/docker-compose.production.yml, infra/nginx.conf"
+        source: 'infra/docker-compose.production.yml, infra/nginx.conf'
         strip_components: 1
-        target: "foodgram"
+        target: 'foodgram'
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       with:
