@@ -81,7 +81,7 @@ class Base64ImageField(serializers.ImageField):
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
-        fields = '__all__'
+        fields = ('id', 'name', 'measurement_unit')
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
@@ -244,7 +244,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 class IngredientinRecipeCreate(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
-        source='ingredient',
         queryset=Ingredient.objects.all()
     )
 
