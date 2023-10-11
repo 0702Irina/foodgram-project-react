@@ -159,6 +159,7 @@ class Recipe(models.Model):
         Ingredient,
         related_name='recipes',
         through='RecipeIngredient',
+        through_fields=('recipe', 'ingredient'),
         verbose_name='Название ингридиента',
         help_text='Выберите ингридиент',
     )
@@ -229,7 +230,7 @@ class RecipeIngredient(models.Model):
         constraints = (
             models.UniqueConstraint(
                 fields=('recipe', 'ingredient'),
-                name='unique_ingredient'
+                name='unique_ingredientrecipe'
             ),
         )
 
