@@ -271,7 +271,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
     def create_ingredients(self, recipe, ingredients):
         ingredient_objects = [
             RecipeIngredient(
-                ingredient=ingredient['ingredient'],
+                ingredient=ingredient['id'],
                 recipe=recipe,
                 amount=ingredient['amount']
             )
