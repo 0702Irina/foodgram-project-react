@@ -260,6 +260,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = (
+            'id',
             'name',
             'cooking_time',
             'text',
@@ -316,6 +317,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
             )
         ingredients_list = []
         for ingredient in ingredients:
+            ingredient_id = ingredient['id']
             if ingredient in ingredients_list:
                 raise ValidationError(
                     'You have already added this ingredient'
@@ -325,7 +327,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                     f'\n The amount of ingredient'
                     f'must be from {MIN_AMOUNT} to {MAX_AMOUNT}.'
                 )
-            ingredients_list.append(ingredient)
+            ingredients_list.append(ingredient_id)
         return ingredients
 
     def validate_cooking_time(self, data):

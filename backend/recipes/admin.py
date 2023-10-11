@@ -51,6 +51,7 @@ class IngredientAdmin(admin.ModelAdmin):
         'measurement_unit'
     )
     search_fields = ('name',)
+    list_filter = ('measurement_unit',)
     empty_value_display = '-пусто-'
     verbose_name = 'Ингридиент',
 
