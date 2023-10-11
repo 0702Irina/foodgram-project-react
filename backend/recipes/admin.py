@@ -31,7 +31,6 @@ class RecipeIngredientInline(admin.TabularInline):
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
         'name',
         'image',
         'text',
