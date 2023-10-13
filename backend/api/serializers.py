@@ -19,9 +19,6 @@ from recipes.models import (
 from recipes.constants import (
     REFOLLOW,
     FOLLOW_YOURSELF,
-    ERROR_COOKING_TIME,
-    MIN_TIME,
-    MAX_TIME
 )
 
 
@@ -306,13 +303,6 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
             context={
                 'request': self.context.get('request')
             }).data
-
-    def validate(self, data):
-        if not MIN_TIME <= data <= MAX_TIME:
-            raise serializers.ValidationError(
-                [[[{ERROR_COOKING_TIME}]]]
-            )
-        return data
 
     def validate_ingredients(self, data):
         ingredients = data
