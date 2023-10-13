@@ -310,6 +310,13 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                 'request': self.context.get('request')
             }).data
 
+    def validate(self, data):
+        if not MIN_TIME <= data <= MAX_TIME:
+            raise serializers.ValidationError(
+                {'cooking_time': f'{ERROR_COOKING_TIME}'}
+            )
+        return data
+
     def validate_ingredients(self, data):
         ingredients = data
         if not ingredients:
@@ -328,11 +335,4 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     {'amount': f'{ERROR_AMOUT}'}
                 )
-        return data
-
-    def validate_cooking_time(self, data):
-        if not MIN_TIME <= data <= MAX_TIME:
-            raise serializers.ValidationError(
-                {'cooking_time': f'{ERROR_COOKING_TIME}'}
-            )
         return data
