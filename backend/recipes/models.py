@@ -4,7 +4,6 @@ from django.db import models
 
 from colorfield.fields import ColorField
 
-from recipes import validators
 from recipes.constants import (
     COLOR_PALETTE,
     MIN_AMOUNT,
@@ -205,7 +204,6 @@ class RecipeIngredient(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        validators=(validators.validate_ingredients),
         verbose_name='Ингредиент',
         help_text='Выберите ингредиент',
     )

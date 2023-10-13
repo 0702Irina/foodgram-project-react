@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from rest_framework import serializers
 from django.core.files.base import ContentFile
+# from django.forms import ValidationError
 
 from djoser.serializers import UserSerializer, UserCreateSerializer
 
@@ -303,3 +304,14 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
             context={
                 'request': self.context.get('request')
             }).data
+
+    def validate_ingredients(self, ingredients):
+        ingredients_list = []
+        for ingredient in ingredients:
+            ingredient_id = ingredient['id']
+            if ingredient_id in ingredients_list:
+                raise serializers.ValidationError(
+                   {'error': 'You have already added this ingredient'}
+                )
+            ingredients_list.append(ingredient_id)
+        return ingredients
