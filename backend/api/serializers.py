@@ -190,7 +190,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     author = UserSerializer()
     tags = TagSerializer(many=True)
     ingredients = serializers.SerializerMethodField(
-       method_name='get_ingredients'
+        method_name='get_ingredients'
     )
     is_favorited = serializers.SerializerMethodField(
         method_name='get_is_favorited'
