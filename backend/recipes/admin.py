@@ -1,124 +1,127 @@
-from django.contrib import admin
+# from django.contrib import admin
 
-from recipes.models import (
-    RecipeIngredient,
-    Shopping_list,
-    Ingredient,
-    Favorite,
-    Follow,
-    Recipe,
-    User,
-    Tag
-)
-
-
-@admin.register(Follow)
-class FollowAdmin(admin.ModelAdmin):
-    list_display = (
-        'user',
-        'author',
-    )
-    search_fields = ('user__username', 'author__username')
-    empty_value_display = '-пусто-'
-    verbose_name = 'Подписки',
+# from recipes.models import (
+#     RecipeIngredient,
+#     Shopping_list,
+#     Ingredient,
+#     Favorite,
+#     Follow,
+#     Recipe,
+#     User,
+#     Tag
+# )
 
 
-class RecipeIngredientInline(admin.TabularInline):
-    model = RecipeIngredient
-    extra = 1
+# @admin.register(Follow)
+# class FollowAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'user',
+#         'author',
+#     )
+#     search_fields = ('user__username', 'author__username')
+#     empty_value_display = '-пусто-'
+#     verbose_name = 'Подписки',
 
 
-@admin.register(Recipe)
-class RecipeAdmin(admin.ModelAdmin):
-    list_display = (
-        'name',
-        'image',
-        'text',
-        'pub_date',
-        'author'
-    )
-    search_fields = ('author__username', 'author__email', 'name')
-    list_filter = ('tags',)
-    empty_value_display = '-пусто-'
-    verbose_name = 'Рецепты',
-    inlines = (RecipeIngredientInline, )
+# class RecipeIngredientInline(admin.TabularInline):
+#     model = RecipeIngredient
+#     extra = 1
 
 
-@admin.register(Ingredient)
-class IngredientAdmin(admin.ModelAdmin):
-    list_display = (
-        'name',
-        'measurement_unit'
-    )
-    search_fields = ('name', 'id')
-    list_filter = ('measurement_unit',)
-    empty_value_display = '-пусто-'
-    verbose_name = 'Ингридиент',
+# @admin.register(Recipe)
+# class RecipeAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'name',
+#         'image',
+#         'text',
+#         'pub_date',
+#         'author'
+#     )
+#     search_fields = ('author__username', 'author__email', 'name')
+#     list_filter = ('tags',)
+#     empty_value_display = '-пусто-'
+#     verbose_name = 'Рецепты',
+#     inlines = (RecipeIngredientInline, )
 
 
-@admin.register(Shopping_list)
-class Shopping_listAdmin(admin.ModelAdmin):
-    list_display = (
-        'user',
-        'recipe',
-    )
-    search_fields = ('user__username', 'user__email', 'recipe__name')
-    list_filter = ('recipe__tags',)
-    empty_value_display = '-пусто-'
-    verbose_name = 'Список покупок',
+# @admin.register(Ingredient)
+# class IngredientAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'name',
+#         'measurement_unit'
+#     )
+#     search_fields = ('name', 'id')
+#     list_filter = ('measurement_unit',)
+#     empty_value_display = '-пусто-'
+#     verbose_name = 'Ингридиент',
 
 
-@admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
-    list_display = (
-        'name',
-        'slug',
-        'color',
-    )
-    search_fields = ('name',)
-    list_filter = ('name',)
-    empty_value_display = '-пусто-'
-    verbose_name = 'Тег',
+# @admin.register(Shopping_list)
+# class Shopping_listAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'user',
+#         'recipe',
+#     )
+#     search_fields = ('user__username', 'user__email', 'recipe__name')
+#     list_filter = ('recipe__tags',)
+#     empty_value_display = '-пусто-'
+#     verbose_name = 'Список покупок',
 
 
-@admin.register(Favorite)
-class FavoritesAdmin(admin.ModelAdmin):
-    list_display = (
-        'user',
-        'recipe'
-    )
-    search_fields = ('user__username', 'user__email', 'recipe__name')
-    list_filter = ('recipe__tags',)
-    verbose_name = 'Избранное'
+# @admin.register(Tag)
+# class TagAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'name',
+#         'slug',
+#         'color',
+#     )
+#     search_fields = ('name',)
+#     list_filter = ('name',)
+#     empty_value_display = '-пусто-'
+#     verbose_name = 'Тег',
 
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    # fieldsets = (
-    #     (
-    #         'Данные пользователя',
-    #         {
-    #              'classes': ('wibe',),
-    #              'fields': (
-    #                  'username',
-    #                  'first_name',
-    #                  'last_name',
-    #                  'email',
-    #                  'password')
-    #         }
-    #     ),
-    #     ('Права пользователя', {'fields': (
-    #             'is_staff',
-    #             'is_active',
-    #             'is_superuser'
-    #         )})
-    # )
-    # add_fieldsets = (
-    #     )
-    list_display = (
-        'username',
-        'email'
-    )
-    search_fields = ('username', 'email')
-    empty_value_display = '-пусто-'
-    verbose_name = 'Пользователь',
+# @admin.register(Favorite)
+# class FavoritesAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'user',
+#         'recipe'
+#     )
+#     search_fields = ('user__username', 'user__email', 'recipe__name')
+#     list_filter = ('recipe__tags',)
+#     verbose_name = 'Избранное'
+
+
+# @admin.register(User)
+# class UserAdmin(admin.ModelAdmin):
+#     # fieldsets = (
+#     #     (
+#     #         'Данные пользователя',
+#     #         {
+#     #              'classes': ('wibe',),
+#     #              'fields': (
+#     #                  'username',
+#     #                  'first_name',
+#     #                  'last_name',
+#     #                  'email',
+#     #                  'password')
+#     #         }
+#     #     ),
+#     #     ('Права пользователя', {'fields': (
+#     #             'is_staff',
+#     #             'is_active',
+#     #             'is_superuser'
+#     #         )})
+#     # )
+#     # add_fieldsets = (
+#     #     )
+#     list_display = (
+#         'username',
+#         'email'
+#     )
+#     list_filter = [
+#         ("is_staff", admin.BooleanFieldListFilter),
+#     ]
+#     search_fields = ('username', 'email')
+#     empty_value_display = '-пусто-'
+#     verbose_name = 'Пользователь',
