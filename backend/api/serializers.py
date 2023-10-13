@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from rest_framework import serializers
 from django.core.files.base import ContentFile
-# from django.forms import ValidationError
+from django.forms import ValidationError
 
 from djoser.serializers import UserSerializer, UserCreateSerializer
 
@@ -19,7 +19,13 @@ from recipes.models import (
 )
 from recipes.constants import (
     REFOLLOW,
-    FOLLOW_YOURSELF
+    FOLLOW_YOURSELF,
+    ERROR_AMOUT,
+    ERROR_COOKING_TIME,
+    MIN_AMOUNT,
+    MAX_AMOUNT,
+    MIN_TIME,
+    MAX_TIME
 )
 
 
@@ -161,7 +167,7 @@ class FollowValidateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if data['user'] == data['author']:
-            raise serializers.ValidationError(
+            raise ValidationError(
                 FOLLOW_YOURSELF
             )
         return data
@@ -305,13 +311,28 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                 'request': self.context.get('request')
             }).data
 
-    def validate_ingredients(self, data):
+    def validate_ingredients(self, ingredients):
+        if not ingredients:
+            raise ValidationError(
+                {'ingredients': 'Recipe must have at least one ingredient'}
+            )
         ingredients_list = []
-        for ingredient in data:
+        for ingredient in ingredients:
             ingredient_id = ingredient['id']
-            if ingredient_id in ingredients_list:
-                raise serializers.ValidationError(
-                   'You have already added this ingredient.'
+            if ingredient in ingredients_list:
+                raise ValidationError(
+                    {'ingredients': 'You have already added this ingredient'}
+                )
+            if not MIN_AMOUNT <= int(ingredient['amount']) <= MAX_AMOUNT:
+                raise ValidationError(
+                    {'amount': f'{ERROR_AMOUT}'}
                 )
             ingredients_list.append(ingredient_id)
+        return ingredients
+
+    def validate_cooking_time(self, data):
+        if not MIN_TIME <= data <= MAX_TIME:
+            raise ValidationError(
+                {'cooking_time': f'{ERROR_COOKING_TIME}'}
+            )
         return data
