@@ -311,7 +311,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
             ingredient_id = ingredient['id']
             if ingredient_id in ingredients_list:
                 raise serializers.ValidationError(
-                   {'error': 'You have already added this ingredient'}
+                   'You have already added this ingredient'
                 )
             ingredients_list.append(ingredient_id)
         return data
