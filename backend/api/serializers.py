@@ -81,7 +81,7 @@ class Base64ImageField(serializers.ImageField):
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
-        fields = '__all__'
+        fields = ('id', 'name', 'measurement_unit')
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
@@ -244,7 +244,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 class IngredientinRecipeCreate(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
-        source='ingredient',
         queryset=Ingredient.objects.all()
     )
 
@@ -260,6 +259,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = (
+            'id',
             'name',
             'cooking_time',
             'text',
@@ -271,7 +271,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
     def create_ingredients(self, recipe, ingredients):
         ingredient_objects = [
             RecipeIngredient(
-                ingredient=ingredient['ingredient'],
+                ingredient=ingredient['id'],
                 recipe=recipe,
                 amount=ingredient['amount']
             )
@@ -316,6 +316,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
             )
         ingredients_list = []
         for ingredient in ingredients:
+            ingredient_id = ingredient['id']
             if ingredient in ingredients_list:
                 raise ValidationError(
                     'You have already added this ingredient'
@@ -325,7 +326,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                     f'\n The amount of ingredient'
                     f'must be from {MIN_AMOUNT} to {MAX_AMOUNT}.'
                 )
-            ingredients_list.append(ingredient)
+            ingredients_list.append(ingredient_id)
         return ingredients
 
     def validate_cooking_time(self, data):

@@ -18,8 +18,7 @@ class FollowAdmin(admin.ModelAdmin):
         'user',
         'author',
     )
-    search_fields = ('user',)
-    list_filter = ('user',)
+    search_fields = ('user__username', 'author__username')
     empty_value_display = '-пусто-'
     verbose_name = 'Подписки',
 
@@ -32,15 +31,14 @@ class RecipeIngredientInline(admin.TabularInline):
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
         'name',
         'image',
         'text',
         'pub_date',
         'author'
     )
-    search_fields = ('name', 'ingredients', 'tags')
-    list_filter = ('pub_date', 'author', 'tags', 'ingredients')
+    search_fields = ('author__username', 'author__email', 'name')
+    list_filter = ('tags',)
     empty_value_display = '-пусто-'
     verbose_name = 'Рецепты',
     inlines = (RecipeIngredientInline, )
@@ -53,6 +51,7 @@ class IngredientAdmin(admin.ModelAdmin):
         'measurement_unit'
     )
     search_fields = ('name',)
+    list_filter = ('measurement_unit',)
     empty_value_display = '-пусто-'
     verbose_name = 'Ингридиент',
 
@@ -63,8 +62,8 @@ class Shopping_listAdmin(admin.ModelAdmin):
         'user',
         'recipe',
     )
-    search_fields = ('user',)
-    list_filter = ('user',)
+    search_fields = ('user__username', 'user__email', 'recipe__name')
+    list_filter = ('recipe__tags',)
     empty_value_display = '-пусто-'
     verbose_name = 'Список покупок',
 
@@ -88,17 +87,17 @@ class FavoritesAdmin(admin.ModelAdmin):
         'user',
         'recipe'
     )
+    search_fields = ('user__username', 'user__email', 'recipe__name')
+    list_filter = ('recipe__tags',)
     verbose_name = 'Избранное'
 
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
         'username',
         'email'
     )
     search_fields = ('username', 'email')
-    list_filter = ('username', 'email')
     empty_value_display = '-пусто-'
     verbose_name = 'Пользователь',
