@@ -50,7 +50,7 @@ class IngredientAdmin(admin.ModelAdmin):
         'name',
         'measurement_unit'
     )
-    search_fields = ('name',)
+    search_fields = ('name', 'id')
     list_filter = ('measurement_unit',)
     empty_value_display = '-пусто-'
     verbose_name = 'Ингридиент',
