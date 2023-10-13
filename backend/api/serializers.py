@@ -310,7 +310,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                 'request': self.context.get('request')
             }).data
 
-    def validate_ingredients(self, data):
+    def validate(self, data):
         ingredients = data
         if not ingredients:
             raise serializers.ValidationError(
