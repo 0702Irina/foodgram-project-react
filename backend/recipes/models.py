@@ -153,6 +153,7 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredient',
+        validators=(validate_ingredients, ),
         verbose_name='Ингредиенты',
         help_text='Выберите ингридиент',
     )
@@ -205,7 +206,6 @@ class RecipeIngredient(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        validators=(validate_ingredients, ),
         verbose_name='Ингредиент',
         help_text='Выберите ингредиент',
     )
