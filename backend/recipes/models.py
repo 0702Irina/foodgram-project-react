@@ -62,7 +62,6 @@ class Ingredient(models. Model):
     name = models.CharField(
         'Название',
         max_length=200,
-        unique=True,
         help_text='Укажите название ингредиента',
     )
     measurement_unit = models.CharField(
@@ -72,8 +71,8 @@ class Ingredient(models. Model):
     )
 
     class Meta:
-        verbose_name = 'Ингридиент'
-        verbose_name_plural = 'Ингридиенты'
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
         return self.name[:20]
@@ -152,9 +151,8 @@ class Recipe(models.Model):
     )
     ingredients = models.ManyToManyField(
         Ingredient,
-        related_name='recipes',
         through='RecipeIngredient',
-        verbose_name='Название ингридиента',
+        verbose_name='Ингредиенты',
         help_text='Выберите ингридиент',
     )
     cooking_time = models.PositiveSmallIntegerField(
