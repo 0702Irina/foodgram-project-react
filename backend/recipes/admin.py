@@ -99,5 +99,6 @@ class UserAdmin(admin.ModelAdmin):
         'email'
     )
     search_fields = ('username', 'email')
+    list_filter = ('user__is_admin',)
     empty_value_display = '-пусто-'
     verbose_name = 'Пользователь',
