@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from rest_framework import serializers
 from django.core.files.base import ContentFile
-from django.forms import ValidationError
 
 from djoser.serializers import UserSerializer, UserCreateSerializer
 
@@ -167,7 +166,7 @@ class FollowValidateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if data['user'] == data['author']:
-            raise ValidationError(
+            raise serializers.ValidationError(
                 FOLLOW_YOURSELF
             )
         return data
@@ -314,18 +313,18 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
     def validate_ingredients(self, data):
         ingredients = data
         if not ingredients:
-            raise ValidationError(
+            raise serializers.ValidationError(
                 {'ingredients': 'Recipe must have at least one ingredient'}
             )
         ingredients_list = []
         for ingredient in ingredients:
             ingredient_id = ingredient['id']
             if ingredient in ingredients_list:
-                raise ValidationError(
+                raise serializers.ValidationError(
                     {'ingredients': 'You have already added this ingredient'}
                 )
             if not MIN_AMOUNT <= int(ingredient['amount']) <= MAX_AMOUNT:
-                raise ValidationError(
+                raise serializers.ValidationError(
                     {'amount': f'{ERROR_AMOUT}'}
                 )
             ingredients_list.append(ingredient_id)
@@ -333,7 +332,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
 
     def validate_cooking_time(self, data):
         if not MIN_TIME <= data <= MAX_TIME:
-            raise ValidationError(
+            raise serializers.ValidationError(
                 {'cooking_time': f'{ERROR_COOKING_TIME}'}
             )
         return data
