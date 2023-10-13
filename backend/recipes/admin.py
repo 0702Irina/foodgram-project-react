@@ -50,7 +50,7 @@ class IngredientAdmin(admin.ModelAdmin):
         'name',
         'measurement_unit'
     )
-    search_fields = ('name',)
+    search_fields = ('name', 'id')
     list_filter = ('measurement_unit',)
     empty_value_display = '-пусто-'
     verbose_name = 'Ингридиент',
@@ -96,7 +96,15 @@ class FavoritesAdmin(admin.ModelAdmin):
 class UserAdmin(admin.ModelAdmin):
     list_display = (
         'username',
-        'email'
+        'email',
+        'is_staff',
+        'is_superuser',
+        'is_active'
+    )
+    list_filter = (
+        ("is_staff", admin.BooleanFieldListFilter),
+        ('is_superuser', admin.BooleanFieldListFilter),
+        ('is_active', admin.BooleanFieldListFilter),
     )
     search_fields = ('username', 'email')
     empty_value_display = '-пусто-'
