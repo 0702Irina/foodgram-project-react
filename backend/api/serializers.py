@@ -328,7 +328,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                     {'amount': f'{ERROR_AMOUT}'}
                 )
             ingredients_list.append(ingredient_id)
-        return ingredients
+        return data
 
     def validate_cooking_time(self, data):
         if not MIN_TIME <= data <= MAX_TIME:
