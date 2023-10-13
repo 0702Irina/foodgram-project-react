@@ -20,8 +20,10 @@ from recipes.models import (
 from recipes.constants import (
     REFOLLOW,
     FOLLOW_YOURSELF,
-    MIN_TIME,
-    MAX_TIME
+    # MIN_AMOUNT,
+    # MAX_AMOUNT,
+    # MIN_TIME,
+    # MAX_TIME
 )
 
 
@@ -307,20 +309,30 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                 'request': self.context.get('request')
             }).data
 
-    def validate(self, values):
-        ingredients_list = []
-        for value in values:
-            id = value.get('ingredient').id
-            if id in ingredients_list:
-                raise serializers.ValidationError(
-                    'You have already added this ingredient'
-                )
-        return values
+    # def validate_ingredients(self, ingredients):
+    #     if not ingredients:
+    #         raise serializers.ValidationError(
+    #             'Recipe must have at least one ingredient'
+    #         )
+    #     ingredients_list = []
+    #     for ingredient in ingredients:
+    #         ingredient_id = ingredient['id']
+    #         if ingredient in ingredients_list:
+    #             raise serializers.ValidationError(
+    #                 'You have already added this ingredient'
+    #             )
+    #         if not MIN_AMOUNT <= int(ingredient['amount']) <= MAX_AMOUNT:
+    #             raise serializers.ValidationError(
+    #                 f'\n The amount of ingredient'
+    #                 f'must be from {MIN_AMOUNT} to {MAX_AMOUNT}.'
+    #             )
+    #         ingredients_list.append(ingredient_id)
+    #     return ingredients
 
-    def validate_cooking_time(self, data):
-        if not MIN_TIME <= data <= MAX_TIME:
-            raise serializers.ValidationError(
-                f'\nThe cooking time'
-                f'should be from {MIN_TIME} to {MAX_TIME} minutes.'
-            )
-        return data
+    # def validate_cooking_time(self, data):
+    #     if not MIN_TIME <= data <= MAX_TIME:
+    #         raise serializers.ValidationError(
+    #             f'\nThe cooking time'
+    #             f'should be from {MIN_TIME} to {MAX_TIME} minutes.'
+    #         )
+    #     return data
