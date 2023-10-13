@@ -94,11 +94,31 @@ class FavoritesAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (
+            'Данные пользователя',
+            {
+                 'classes': ('wibe',),
+                 'fields': (
+                     'username',
+                     'first_name',
+                     'last_name',
+                     'email',
+                     'password')
+            }
+        ),
+        ('Права пользователя', {'fields': (
+                'is_staff',
+                'is_active',
+                'is_superuser'
+            )})
+    )
+    add_fieldsets = (
+        )
     list_display = (
         'username',
         'email'
     )
     search_fields = ('username', 'email')
-    # list_filter = ('is_active',)
     empty_value_display = '-пусто-'
     verbose_name = 'Пользователь',
