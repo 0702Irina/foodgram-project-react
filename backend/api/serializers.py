@@ -309,7 +309,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                 'request': self.context.get('request')
             }).data
 
-    def validate_ingredients(self, ingredients):
+    def validate(self, ingredients):
         if not ingredients:
             raise ValidationError(
                 'Recipe must have at least one ingredient'
