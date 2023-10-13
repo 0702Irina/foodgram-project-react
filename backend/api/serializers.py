@@ -305,13 +305,13 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                 'request': self.context.get('request')
             }).data
 
-    def validate_ingredients(self, ingredients):
+    def validate_ingredients(self, data):
         ingredients_list = []
-        for ingredient in ingredients:
+        for ingredient in data:
             ingredient_id = ingredient['id']
             if ingredient_id in ingredients_list:
                 raise serializers.ValidationError(
                    {'error': 'You have already added this ingredient'}
                 )
             ingredients_list.append(ingredient_id)
-        return ingredients
+        return data
