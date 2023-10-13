@@ -310,7 +310,7 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                 'request': self.context.get('request')
             }).data
 
-    def validate(self, data):
+    def validate_ingredients(self, data):
         ingredients = data
         if not ingredients:
             raise serializers.ValidationError(
@@ -323,11 +323,11 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     {'ingredients': 'You have already added this ingredient'}
                 )
-            if not MIN_AMOUNT <= int(ingredient['amount']) <= MAX_AMOUNT:
+            ingredients_list.append(ingredient_id)
+            if not MIN_AMOUNT >= int(ingredient['amount']) >= MAX_AMOUNT:
                 raise serializers.ValidationError(
                     {'amount': f'{ERROR_AMOUT}'}
                 )
-            ingredients_list.append(ingredient_id)
         return data
 
     def validate_cooking_time(self, data):
