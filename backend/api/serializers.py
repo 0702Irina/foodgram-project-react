@@ -19,12 +19,12 @@ from recipes.models import (
 from recipes.constants import (
     REFOLLOW,
     FOLLOW_YOURSELF,
-    # ERROR_AMOUT,
-    # ERROR_COOKING_TIME,
-    # MIN_AMOUNT,
-    # MAX_AMOUNT,
-    # MIN_TIME,
-    # MAX_TIME
+    ERROR_AMOUT,
+    ERROR_COOKING_TIME,
+    MIN_AMOUNT,
+    MAX_AMOUNT,
+    MIN_TIME,
+    MAX_TIME
 )
 
 
@@ -310,19 +310,19 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                 'request': self.context.get('request')
             }).data
 
-    # def validate(self, data):
-    #     if not MIN_TIME <= data <= MAX_TIME:
-    #         raise serializers.ValidationError(
-    #             {'cooking_time': f'{ERROR_COOKING_TIME}'}
-    #         )
-    #     return data
+    def validate(self, data):
+        if not MIN_TIME <= data <= MAX_TIME:
+            raise serializers.ValidationError(
+                {'cooking_time': f'{ERROR_COOKING_TIME}'}
+            )
+        return data
 
     def validate_ingredients(self, data):
         ingredients = data
-        # if not ingredients:
-        #     raise serializers.ValidationError(
-        #         {'ingredients': 'Recipe must have at least one ingredient'}
-        #     )
+        if not ingredients:
+            raise serializers.ValidationError(
+                {'ingredients': 'Recipe must have at least one ingredient'}
+            )
         ingredients_list = []
         for ingredient in ingredients:
             ingredient_id = ingredient['id']
@@ -331,4 +331,8 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                     {'ingredients': 'You have already added this ingredient'}
                 )
             ingredients_list.append(ingredient_id)
+            if not MIN_AMOUNT <= int(ingredient['amount']) <= MAX_AMOUNT:
+                raise serializers.ValidationError(
+                    {'amount': f'{ERROR_AMOUT}'}
+                )
         return data
