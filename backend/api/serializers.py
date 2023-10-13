@@ -19,10 +19,10 @@ from recipes.models import (
 from recipes.constants import (
     REFOLLOW,
     FOLLOW_YOURSELF,
-    # ERROR_AMOUT,
+    ERROR_AMOUT,
     ERROR_COOKING_TIME,
-    # MIN_AMOUNT,
-    # MAX_AMOUNT,
+    MIN_AMOUNT,
+    MAX_AMOUNT,
     MIN_TIME,
     MAX_TIME
 )
@@ -324,10 +324,10 @@ class RecipeCreateSerializers(serializers.ModelSerializer):
                     {'ingredients': 'You have already added this ingredient'}
                 )
             ingredients_list.append(ingredient_id)
-            # if not MIN_AMOUNT = int(ingredient['amount']) >= MAX_AMOUNT:
-            #     raise serializers.ValidationError(
-            #         {'amount': f'{ERROR_AMOUT}'}
-            #     )
+            if not MIN_AMOUNT <= int(ingredient['amount']) <= MAX_AMOUNT:
+                raise serializers.ValidationError(
+                    {'amount': f'{ERROR_AMOUT}'}
+                )
         return data
 
     def validate_cooking_time(self, data):
